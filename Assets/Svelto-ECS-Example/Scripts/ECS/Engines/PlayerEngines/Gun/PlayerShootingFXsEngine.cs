@@ -5,7 +5,7 @@ using Svelto.Tasks;
 using Svelto.Tasks.Enumerators;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player.Gun {
-    public class PlayerGunShootsFX : Engine<Gun>, IQueryingEntitiesEngine {
+    public class PlayerGunShotSpawnsFX : Engine<Gun>, IQueryingEntitiesEngine {
         public IEntitiesDB entitiesDB { set; private get; }
 
         public void Ready() {

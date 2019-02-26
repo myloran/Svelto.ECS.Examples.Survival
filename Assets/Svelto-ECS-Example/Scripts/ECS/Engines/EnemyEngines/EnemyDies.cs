@@ -32,7 +32,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
                 var enemyEntitiesViews =
                     entitiesDB.QueryEntities<EnemyView>(ECSGroups.ActiveEnemies, out count);
                 var enemyEntitiesHealth =
-                    entitiesDB.QueryEntities<HealthEntityStruct>(ECSGroups.ActiveEnemies, out count);
+                    entitiesDB.QueryEntities<Health>(ECSGroups.ActiveEnemies, out count);
 
                 for (int index = 0; index < count; index++)
                 {

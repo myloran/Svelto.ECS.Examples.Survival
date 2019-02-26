@@ -15,7 +15,7 @@ namespace Svelto.ECS.Example.Survive {
 
         IEnumerator CheckIfDead() {
             while (true) {
-                var players = entitiesDB.QueryEntities<HealthEntityStruct>(ECSGroups.Player, out var count);
+                var players = entitiesDB.QueryEntities<Health>(ECSGroups.Player, out var count);
                 
                 for (var i = 0; i < count; i++) {
                     if (!players[i].dead) continue;

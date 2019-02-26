@@ -183,7 +183,7 @@ namespace Svelto.ECS.Example.Survive
             _enginesRoot.AddEngine(playerAnimates);
             _enginesRoot.AddEngine(playerGunShoots);
             _enginesRoot.AddEngine(new PlayerReadsInput());
-            _enginesRoot.AddEngine(new PlayerGunShootsFX());
+            _enginesRoot.AddEngine(new PlayerGunShotSpawnsFX());
             _enginesRoot.AddEngine(playerDies);
 
             //enemy engines
@@ -193,7 +193,7 @@ namespace Svelto.ECS.Example.Survive
             _enginesRoot.AddEngine(enemyAnimates);
             _enginesRoot.AddEngine(enemyDies);
             //other engines
-            _enginesRoot.AddEngine(new DamageAppliesToTargets());
+            _enginesRoot.AddEngine(new HealthDamages());
             _enginesRoot.AddEngine(new CameraFollowsTarget(time));
             _enginesRoot.AddEngine(new Dies());
             _enginesRoot.AddEngine(damageTriggersSound);
@@ -234,7 +234,7 @@ namespace Svelto.ECS.Example.Survive
             var initializer =
                 _entityFactory.BuildEntity<PlayerEntityDescriptor>(player.GetInstanceID(), ECSGroups.Player,
                                                                    player.GetComponents<IImplementor>());
-            initializer.Init(new HealthEntityStruct {currentHealth = 100});
+            initializer.Init(new Health {current = 100});
 
             //unluckily the gun is parented in the original prefab, so there is no easy way to create it explicitly, I
             //have to create if from the existing gameobject.

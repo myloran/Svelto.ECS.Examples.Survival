@@ -1,8 +1,8 @@
 namespace Svelto.ECS.Example.Survive.Characters
 {
-    public struct HealthEntityStruct : IEntityStruct
+    public struct Health : IEntityStruct
     {
-        public int currentHealth;
+        public int current;
         public bool dead;
 
         public EGID ID { get; set; }

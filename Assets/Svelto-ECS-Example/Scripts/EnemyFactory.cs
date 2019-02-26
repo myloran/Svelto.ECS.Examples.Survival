@@ -45,7 +45,7 @@ namespace Svelto.ECS.Example.Survive
                 }
                 
                 initializer.Init(enemyAttackstruct);
-                initializer.Init(new HealthEntityStruct {currentHealth  = 100});
+                initializer.Init(new Health {current  = 100});
                 initializer.Init(new ScoreValueEntityStruct {scoreValue = (int) (enemySpawnData.targetType + 1) * 10});
                 initializer.Init(new Enemy {enemyType       = enemySpawnData.targetType});
                 initializer.Init(new EnemySink

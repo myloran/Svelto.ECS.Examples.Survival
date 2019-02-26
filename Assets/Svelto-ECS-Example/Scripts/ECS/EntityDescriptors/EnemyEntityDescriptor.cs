@@ -11,7 +11,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
                                                                 new EntityBuilder <EnemyAttack>(),
                                                                 new EntityBuilder <DamageSoundEntityView>(),
                                                                 new EntityBuilder <EnemyAttackStruct>(),
-                                                                new EntityBuilder <HealthEntityStruct>(),
+                                                                new EntityBuilder <Health>(),
                                                                 new EntityBuilder <ScoreValueEntityStruct>(),
                                                                 new EntityBuilder<EnemySink>(), 
                                                                 new EntityBuilder <Damageable>()};

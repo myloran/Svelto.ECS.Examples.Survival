@@ -115,12 +115,12 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
         void ReuseEnemy(int fromGroupId, JSonEnemySpawnData spawnData)
         {
             int count;
-            var healths = entitiesDB.QueryEntities<HealthEntityStruct>(fromGroupId, out count);
+            var healths = entitiesDB.QueryEntities<Health>(fromGroupId, out count);
            
             if (count > 0)
             {
                 var enemystructs = entitiesDB.QueryEntities<EnemyView>(fromGroupId, out count);
-                healths[0].currentHealth = 100;
+                healths[0].current = 100;
                 healths[0].dead          = false;
 
                 var spawnInfo = spawnData.enemySpawnData.spawnPoint;

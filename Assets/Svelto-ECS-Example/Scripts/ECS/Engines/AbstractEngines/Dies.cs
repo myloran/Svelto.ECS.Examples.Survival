@@ -14,9 +14,9 @@ namespace Svelto.ECS.Example.Survive.Characters
             while (true)
             {
                 entitiesDB.ExecuteOnAllEntities(ECSGroups.DamageableGroups,
-                                                (ref HealthEntityStruct health, IEntitiesDB entitiesdb, int index) =>
+                                                (ref Health health, IEntitiesDB entitiesdb, int index) =>
                         {
-                            if (health.currentHealth <= 0)
+                            if (health.current <= 0)
                                 health.dead = true;
                         });
 

@@ -56,14 +56,14 @@ namespace Svelto.ECS.Example.Survive.HUD
                 var damageablePlayerEntities =
                     entitiesDB.QueryEntities<Damageable>(ECSGroups.Player, out numberOfPlayers);
                 var playerHealthEntities =
-                    entitiesDB.QueryEntities<HealthEntityStruct>(ECSGroups.Player, out numberOfPlayers);
+                    entitiesDB.QueryEntities<Health>(ECSGroups.Player, out numberOfPlayers);
                 for (int i = 0; i < numberOfPlayers; i++)
                 {
                     if (damageablePlayerEntities[i].damaged == false) continue;
 
                     //An engine should never assume how many entities will be used, so we iterate over all the
                     //HUDEntityViews even if we know there is just one
-                    entitiesDB.ExecuteOnEntities(ECSGroups.ExtraStuff, ref playerHealthEntities[i].currentHealth,
+                    entitiesDB.ExecuteOnEntities(ECSGroups.ExtraStuff, ref playerHealthEntities[i].current,
                                                  (ref HUDEntityView guiEntityView, ref int refhealth,
                                                   IEntitiesDB       entitiesdb,    int     innerIndex) =>
                                                  {
