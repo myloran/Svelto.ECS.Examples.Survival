@@ -134,15 +134,15 @@ namespace Svelto.ECS.Example.Survive
 
             //Player related engines. ALL the dependencies must be solved at this point
             //through constructor injection.
-            var playerShootingEngine  = new PlayerGunShoots(rayCaster, time);
-            var playerMovementEngine  = new PlayerMoves(rayCaster, time);
-            var playerAnimationEngine = new PlayerAnimates();
-            var playerDeathEngine     = new PlayerDies(playerDeathFlow, entityFunctions);
+            var playerGunShoots  = new PlayerGunShoots(rayCaster, time);
+            var playerMoves  = new PlayerMoves(rayCaster, time);
+            var playerAnimates = new PlayerAnimates();
+            var playerDies     = new PlayerDies(playerDeathFlow, entityFunctions);
 
             //Enemy related engines
-            var enemyAnimationEngine = new EnemyAnimates(time, enemyDeathFlow, entityFunctions);
-            var enemyAttackEngine    = new EnemyAttacks(time);
-            var enemyMovementEngine  = new EnemyMoves();
+            var enemyAnimates = new EnemyAnimates(time, enemyDeathFlow, entityFunctions);
+            var enemyAttacks    = new EnemyAttacks(time);
+            var enemyMoves  = new EnemyMoves();
 
             //GameObjectFactory allows to create GameObjects without using the Static
             //method GameObject.Instantiate. While it seems a complication
@@ -153,13 +153,13 @@ namespace Svelto.ECS.Example.Survive
             var gameObjectFactory = new GameObjectFactory();
             //Factory is one of the few patterns that work very well with ECS. Its use is highly encouraged
             IEnemyFactory enemyFactory       = new EnemyFactory(gameObjectFactory, _entityFactory);
-            var           enemySpawnerEngine = new EnemySpawns(enemyFactory, entityFunctions);
-            var           enemyDeathEngine   = new EnemyDies(entityFunctions, enemyDeathFlow);
+            var           enemySpawns = new EnemySpawns(enemyFactory, entityFunctions);
+            var           enemyDies   = new EnemyDies(entityFunctions, enemyDeathFlow);
 
             //hud and sound engines
-            var hudEngine         = new HUDHandles(time);
-            var damageSoundEngine = new DamageTriggersSound();
-            var scoreEngine       = new ScoreCalculates();
+            var hudHandles         = new HUDHandles(time);
+            var damageTriggersSound = new DamageTriggersSound();
+            var scoreCalculates       = new ScoreCalculates();
 
             //The ISequencer implementation is very simple, but allows to perform
             //complex concatenation including loops and conditional branching.
@@ -173,39 +173,32 @@ namespace Svelto.ECS.Example.Survive
             //- ensure the order of execution through several steps. Each engine inside each step has the responsibility
             //to trigger the next step through the use of the Next() function
             //- create paths with branches and loop using the Condition parameter.
-            playerDeathFlow.SetSequence(playerDeathEngine,
-                                            playerMovementEngine,
-                                            playerAnimationEngine,
-                                            enemyAnimationEngine,
-                                            damageSoundEngine,
-                                            hudEngine);
-
-            enemyDeathFlow.SetSequence(enemyDeathEngine, scoreEngine, damageSoundEngine, enemyAnimationEngine,
-                                           enemySpawnerEngine);
+            playerDeathFlow.SetSequence(playerDies, playerMoves, playerAnimates, enemyAnimates, damageTriggersSound, hudHandles);
+            enemyDeathFlow.SetSequence(enemyDies, scoreCalculates, damageTriggersSound, enemyAnimates, enemySpawns);
 
 
             //All the logic of the game must lie inside engines
             //Player engines
-            _enginesRoot.AddEngine(playerMovementEngine);
-            _enginesRoot.AddEngine(playerAnimationEngine);
-            _enginesRoot.AddEngine(playerShootingEngine);
+            _enginesRoot.AddEngine(playerMoves);
+            _enginesRoot.AddEngine(playerAnimates);
+            _enginesRoot.AddEngine(playerGunShoots);
             _enginesRoot.AddEngine(new PlayerReadsInput());
             _enginesRoot.AddEngine(new PlayerGunShootsFX());
-            _enginesRoot.AddEngine(playerDeathEngine);
+            _enginesRoot.AddEngine(playerDies);
 
             //enemy engines
-            _enginesRoot.AddEngine(enemySpawnerEngine);
-            _enginesRoot.AddEngine(enemyAttackEngine);
-            _enginesRoot.AddEngine(enemyMovementEngine);
-            _enginesRoot.AddEngine(enemyAnimationEngine);
-            _enginesRoot.AddEngine(enemyDeathEngine);
+            _enginesRoot.AddEngine(enemySpawns);
+            _enginesRoot.AddEngine(enemyAttacks);
+            _enginesRoot.AddEngine(enemyMoves);
+            _enginesRoot.AddEngine(enemyAnimates);
+            _enginesRoot.AddEngine(enemyDies);
             //other engines
             _enginesRoot.AddEngine(new DamageAppliesToTargets());
             _enginesRoot.AddEngine(new CameraFollowsTarget(time));
             _enginesRoot.AddEngine(new Dies());
-            _enginesRoot.AddEngine(damageSoundEngine);
-            _enginesRoot.AddEngine(hudEngine);
-            _enginesRoot.AddEngine(scoreEngine);
+            _enginesRoot.AddEngine(damageTriggersSound);
+            _enginesRoot.AddEngine(hudHandles);
+            _enginesRoot.AddEngine(scoreCalculates);
         }
 
 
