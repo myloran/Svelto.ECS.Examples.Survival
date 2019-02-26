@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player
 {
-    public class PlayerShootingImplementor : MonoBehaviour, IImplementor, IGunAttributesComponent, IGunFXComponent, IGunHitTargetComponent
+    public class PlayerShootingImplementor : MonoBehaviour, IImplementor, IAttributes, IFX, IGunHitTarget
     {
         public int   DamagePerShot      = 20;    // The damage inflicted by each bullet.
         public float TimeBetweenBullets = 0.15f; // The time between each shot.

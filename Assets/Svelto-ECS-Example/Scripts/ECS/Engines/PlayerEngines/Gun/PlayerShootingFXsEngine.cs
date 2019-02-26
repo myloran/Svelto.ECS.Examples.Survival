@@ -6,7 +6,7 @@ using Svelto.Tasks.Enumerators;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
 {
-    public class PlayerGunShootingFXsEngine : SingleEntityEngine<GunEntityViewStruct>, IQueryingEntitiesEngine
+    public class PlayerGunShootingFXsEngine : SingleEntityEngine<Gun>, IQueryingEntitiesEngine
     {
         public IEntitiesDB entitiesDB { set; private get; }
 
@@ -24,22 +24,22 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
         /// querying is always cleaner.
         /// </summary>
         /// <param name="playerGunEntityView"></param>
-        protected override void Add(ref GunEntityViewStruct playerGunEntityView)
+        protected override void Add(ref Gun playerGunEntityView)
         {
-            playerGunEntityView.gunHitTargetComponent.targetHit.NotifyOnValueSet(PlayerHasShot);
+            playerGunEntityView.gunHitTarget.targetHit.NotifyOnValueSet(PlayerHasShot);
             
-            _waitForSeconds = new WaitForSecondsEnumerator(playerGunEntityView.gunComponent.timeBetweenBullets * playerGunEntityView.gunFXComponent.effectsDisplayTime);
+            _waitForSeconds = new WaitForSecondsEnumerator(playerGunEntityView.attributes.timeBetweenBullets * playerGunEntityView.fx.effectsDisplayTime);
         }
 
-        protected override void Remove(ref GunEntityViewStruct playerGunEntityView)
+        protected override void Remove(ref Gun playerGunEntityView)
         {}
 
         void PlayerHasShot(int ID, bool targetHasBeenHit)
         {
             uint index;
-            var structs = entitiesDB.QueryEntitiesAndIndex<GunEntityViewStruct>(new EGID(ID, ECSGroups.Player), out index);
+            var structs = entitiesDB.QueryEntitiesAndIndex<Gun>(new EGID(ID, ECSGroups.Player), out index);
 
-            var gunFXComponent = structs[index].gunFXComponent;
+            var gunFXComponent = structs[index].fx;
 
             // Play the gun shot audioclip.
             gunFXComponent.playAudio = true;
@@ -51,7 +51,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
             gunFXComponent.play = false;
             gunFXComponent.play = true;
 
-            var gunComponent = structs[index].gunComponent;
+            var gunComponent = structs[index].attributes;
             var shootRay = gunComponent.shootRay;
 
             // Enable the line renderer and set it's first position to be the end of the gun.
@@ -84,9 +84,9 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
         void DisableEffects ()
         {
             int targetsCount;
-            var gunEntityViews = entitiesDB.QueryEntities<GunEntityViewStruct>(ECSGroups.Player, out targetsCount);
+            var gunEntityViews = entitiesDB.QueryEntities<Gun>(ECSGroups.Player, out targetsCount);
 
-            var fxComponent = gunEntityViews[0].gunFXComponent;
+            var fxComponent = gunEntityViews[0].fx;
             // Disable the line renderer and the light.
             fxComponent.lineEnabled = false;
             fxComponent.lightEnabled = false;

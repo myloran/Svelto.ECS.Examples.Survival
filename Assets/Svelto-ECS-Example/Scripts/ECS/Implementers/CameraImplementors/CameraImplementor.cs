@@ -2,7 +2,7 @@
 
 namespace Svelto.ECS.Example.Survive.Camera
 {
-    public class CameraImplementor : MonoBehaviour, ITransformComponent
+    public class CameraImplementor : MonoBehaviour, ITransform
     {
         Transform cameraTransform;
 

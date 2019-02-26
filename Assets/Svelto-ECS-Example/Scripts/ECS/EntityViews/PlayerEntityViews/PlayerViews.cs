@@ -1,23 +1,23 @@
 namespace Svelto.ECS.Example.Survive.Characters.Player
 {
-    public struct PlayerEntityViewStruct : IEntityViewStruct
+    public struct Player : IEntityViewStruct
     {
-        public ISpeedComponent         speedComponent;
-        public IRigidBodyComponent     rigidBodyComponent;
-        public IPositionComponent      positionComponent;
-        public IAnimationComponent     animationComponent;
-        public ITransformComponent     transformComponent;
+        public ISpeed         speed;
+        public IBody     body;
+        public IPosition      position;
+        public IAnimation     animation;
+        public ITransform     transform;
         public EGID ID { get; set; }
     }
 }
 
 namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
 {
-    public struct GunEntityViewStruct : IEntityViewStruct
+    public struct Gun : IEntityViewStruct
     {
-        public IGunAttributesComponent   gunComponent;
-        public IGunFXComponent           gunFXComponent;
-        public IGunHitTargetComponent    gunHitTargetComponent;
+        public IAttributes   attributes;
+        public IFX           fx;
+        public IGunHitTarget    gunHitTarget;
         public EGID ID { get; set; }
     }
 }

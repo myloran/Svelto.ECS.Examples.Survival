@@ -4,10 +4,10 @@ using UnityEngine;
 namespace Svelto.ECS.Example.Survive.Characters.Player
 {
     public class PlayerMovementImplementor : MonoBehaviour, IImplementor,
-        IRigidBodyComponent,
+        IBody,
         ICameraTargetComponent,
-        ISpeedComponent,
-        ITransformComponent
+        ISpeed,
+        ITransform
     {
         public float speed = 6f;            // The speed that the player will move at.
 

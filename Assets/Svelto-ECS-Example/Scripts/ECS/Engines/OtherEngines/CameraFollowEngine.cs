@@ -7,7 +7,7 @@ namespace Svelto.ECS.Example.Survive.Camera
     //First step identify the entity type we want the engine to handle: CameraEntity
     //Second step name the engine according the behaviour and the entity: I.E.: CameraFollowTargetEngine
     //Third step start to write the code and create classes/fields as needed using refactoring tools 
-    public class CameraFollowTargetEngine : MultiEntitiesEngine<CameraEntityView, CameraTargetEntityView>, IQueryingEntitiesEngine
+    public class CameraFollowTargetEngine : Engine<CameraEntityView, CameraTargetEntityView>, IQueryingEntitiesEngine
     {
         public CameraFollowTargetEngine(ITime time)
         {
@@ -50,14 +50,14 @@ namespace Svelto.ECS.Example.Survive.Camera
 
             float smoothing = 5.0f;
             
-            Vector3 offset = cameraEntities[0].positionComponent.position - cameraTargets[0].targetComponent.position;
+            Vector3 offset = cameraEntities[0].position.position - cameraTargets[0].targetComponent.position;
             
             while (true)
             {
                 Vector3 targetCameraPos = cameraTargets[0].targetComponent.position + offset;
 
-                cameraEntities[0].transformComponent.position = Vector3.Lerp(
-                                                                             cameraEntities[0].positionComponent.position, targetCameraPos, smoothing * _time.deltaTime);
+                cameraEntities[0].transform.position = Vector3.Lerp(
+                                                                             cameraEntities[0].position.position, targetCameraPos, smoothing * _time.deltaTime);
                 
                 yield return null;
             }

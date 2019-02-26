@@ -29,7 +29,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
             var entity = entitiesDB.QueryEntities<EnemyEntityViewStruct>(ECSGroups.ActiveEnemies, out count);
 
             for (var i = 0; i < count; i++)
-                entity[i].animationComponent.playAnimation = "PlayerDead";
+                entity[i].animation.playAnimation = "PlayerDead";
         }
         
         IEnumerator AnimateOnDamage()
@@ -66,7 +66,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
             
                 for (int i = 0; i < numberOfEnemies; i++)
                 {
-                    var animationComponent = enemyEntityViewsStructs[i].animationComponent;
+                    var animationComponent = enemyEntityViewsStructs[i].animation;
                     if (animationComponent.playAnimation != "Dead")
                     {
                         animationComponent.playAnimation = "Dead";
@@ -76,8 +76,8 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
                     {
                         if (DateTime.UtcNow < enemyEntitySinkStructs[i].animationTime)
                         {
-                            enemyEntityViewsStructs[i].transformComponent.position = 
-                                enemyEntityViewsStructs[i].positionComponent.position + -UnityEngine.Vector3.up * enemyEntitySinkStructs[i].sinkAnimSpeed * _time.deltaTime;
+                            enemyEntityViewsStructs[i].transform.position = 
+                                enemyEntityViewsStructs[i].position.position + -UnityEngine.Vector3.up * enemyEntitySinkStructs[i].sinkAnimSpeed * _time.deltaTime;
                         }
                         else
                         {

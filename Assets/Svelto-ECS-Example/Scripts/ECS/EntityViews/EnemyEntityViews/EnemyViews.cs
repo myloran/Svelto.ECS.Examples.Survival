@@ -5,9 +5,9 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
         public IEnemyMovementComponent    movementComponent;
         public IEnemyVFXComponent         vfxComponent;
     
-        public IAnimationComponent        animationComponent;
-        public ITransformComponent        transformComponent;
-        public IPositionComponent         positionComponent;
+        public IAnimation        animation;
+        public ITransform        transform;
+        public IPosition         position;
         public ILayerComponent            layerComponent;
         
         public EGID ID { get; set; }
@@ -21,7 +21,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
 
     public struct EnemyTargetEntityViewStruct : IEntityViewStruct
     {
-        public IPositionComponent targetPositionComponent;
+        public IPosition targetPosition;
         public EGID ID { get; set; }
     }
 }

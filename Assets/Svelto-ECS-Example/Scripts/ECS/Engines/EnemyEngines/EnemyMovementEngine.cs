@@ -26,7 +26,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
                     for (var i = 0; i < count; i++)
                     {
                         enemies[i].movementComponent.navMeshDestination =
-                            enemyTargetEntityViews[0].targetPositionComponent.position;
+                            enemyTargetEntityViews[0].targetPosition.position;
                     }
                 }
 

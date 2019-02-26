@@ -134,7 +134,7 @@ namespace Svelto.ECS.Example.Survive
 
             //Player related engines. ALL the dependencies must be solved at this point
             //through constructor injection.
-            var playerShootingEngine  = new PlayerGunShootingEngine(rayCaster, time);
+            var playerShootingEngine  = new PlayerGunShooting(rayCaster, time);
             var playerMovementEngine  = new PlayerMovementEngine(rayCaster, time);
             var playerAnimationEngine = new PlayerAnimationEngine();
             var playerDeathEngine     = new PlayerDeathEngine(playerDeathSequence, entityFunctions);

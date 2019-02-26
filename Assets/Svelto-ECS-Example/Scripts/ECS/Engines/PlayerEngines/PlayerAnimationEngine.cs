@@ -3,7 +3,7 @@ using Svelto.Tasks;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player
 {
-    public class PlayerAnimationEngine : SingleEntityEngine<PlayerEntityViewStruct>, IQueryingEntitiesEngine, IStep<PlayerDeathCondition>
+    public class PlayerAnimationEngine : SingleEntityEngine<Player>, IQueryingEntitiesEngine, IStep<PlayerDeathCondition>
     {
         public IEntitiesDB entitiesDB { get; set; }
         public void Ready()
@@ -20,14 +20,14 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
         IEnumerator PhysicsTick()
         {
             //wait for the player to spawn
-            while (entitiesDB.HasAny<PlayerEntityViewStruct>(ECSGroups.Player) == false)
+            while (entitiesDB.HasAny<Player>(ECSGroups.Player) == false)
             {
                 yield return null; //skip a frame
             }
 
             int targetsCount;
-            var playerEntityViews = entitiesDB.QueryEntities<PlayerEntityViewStruct>(ECSGroups.Player, out targetsCount);
-            var playerInputDatas = entitiesDB.QueryEntities<PlayerInputDataStruct>(ECSGroups.Player, out targetsCount);
+            var playerEntityViews = entitiesDB.QueryEntities<Player>(ECSGroups.Player, out targetsCount);
+            var playerInputDatas = entitiesDB.QueryEntities<PlayerInput>(ECSGroups.Player, out targetsCount);
             
             while (true)
             {
@@ -37,7 +37,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
                 bool walking = input.x != 0f || input.z != 0f;
 
                 // Tell the animator whether or not the player is walking.
-                playerEntityViews[0].animationComponent.animationState = new AnimationState("IsWalking", walking);
+                playerEntityViews[0].animation.animationState = new AnimationState("IsWalking", walking);
 
                 yield return null;
             }
@@ -46,15 +46,15 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
         public void Step(PlayerDeathCondition condition, EGID id)
         {
             uint index;
-            var  playerEntityViews = entitiesDB.QueryEntitiesAndIndex<PlayerEntityViewStruct>(id, out index);
+            var  playerEntityViews = entitiesDB.QueryEntitiesAndIndex<Player>(id, out index);
             
-            playerEntityViews[index].animationComponent.playAnimation = "Die";
+            playerEntityViews[index].animation.playAnimation = "Die";
         }
 
-        protected override void Add(ref PlayerEntityViewStruct entityView)
+        protected override void Add(ref Player entityView)
         {}
 
-        protected override void Remove(ref PlayerEntityViewStruct entityView)
+        protected override void Remove(ref Player entityView)
         {
             _taskRoutine.Stop();
         }

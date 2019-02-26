@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
 {
-    public interface IGunAttributesComponent: IComponent
+    public interface IAttributes: IComponent
     {
         float   timeBetweenBullets { get; }
         Ray     shootRay           { get; }
@@ -12,12 +12,12 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
         Vector3 lastTargetPosition { get; set; }
     }
 
-    public interface IGunHitTargetComponent : IComponent
+    public interface IGunHitTarget : IComponent
     {
         DispatchOnSet<bool> targetHit { get; }
     }
 
-    public interface IGunFXComponent: IComponent
+    public interface IFX: IComponent
     {
         float   effectsDisplayTime { get; }
         Vector3 lineEndPosition    { set; }

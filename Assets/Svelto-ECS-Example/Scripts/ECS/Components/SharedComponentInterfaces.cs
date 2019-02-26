@@ -2,19 +2,19 @@ using UnityEngine;
 
 namespace Svelto.ECS.Example.Survive
 {
-    public interface IAnimationComponent: IComponent
+    public interface IAnimation: IComponent
     {
         string playAnimation { set; get; }
         AnimationState animationState { set; }
         bool reset { set; }
     }
 
-    public interface IPositionComponent: IComponent
+    public interface IPosition: IComponent
     {
         Vector3 position { get; }
     }
 
-    public interface ITransformComponent: IPositionComponent
+    public interface ITransform: IPosition
     {
         new Vector3 position { set; }
         Quaternion rotation { set; }
@@ -25,12 +25,12 @@ namespace Svelto.ECS.Example.Survive
         int layer { set; }
     }
 
-    public interface IRigidBodyComponent: IComponent
+    public interface IBody: IComponent
     {
         bool isKinematic { set; }
     }
 
-    public interface ISpeedComponent: IComponent
+    public interface ISpeed: IComponent
     {
         float movementSpeed { get; }
     }

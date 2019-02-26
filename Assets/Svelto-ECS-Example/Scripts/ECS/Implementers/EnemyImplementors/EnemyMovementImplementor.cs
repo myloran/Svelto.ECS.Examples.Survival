@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 namespace Svelto.ECS.Example.Survive.Characters.Enemies
 {
-    public class EnemyMovementImplementor : MonoBehaviour, IImplementor, IEnemyMovementComponent, ITransformComponent, ILayerComponent
+    public class EnemyMovementImplementor : MonoBehaviour, IImplementor, IEnemyMovementComponent, ITransform, ILayerComponent
     {
         NavMeshAgent    _nav;                       // Reference to the nav mesh agent.
         CapsuleCollider _capsuleCollider;           // Reference to the capsule collider.

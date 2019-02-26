@@ -125,11 +125,11 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
 
                 var spawnInfo = spawnData.enemySpawnData.spawnPoint;
 
-                enemystructs[0].transformComponent.position = spawnInfo;
+                enemystructs[0].transform.position = spawnInfo;
                 enemystructs[0].movementComponent.navMeshEnabled      = true;
                 enemystructs[0].movementComponent.setCapsuleAsTrigger = false;
                 enemystructs[0].layerComponent.layer                  = GAME_LAYERS.ENEMY_LAYER;
-                enemystructs[0].animationComponent.reset = true;
+                enemystructs[0].animation.reset = true;
                 
                 _entityFunctions.SwapEntityGroup<EnemyEntityDescriptor>(enemystructs[0].ID, ECSGroups.ActiveEnemies);
             }

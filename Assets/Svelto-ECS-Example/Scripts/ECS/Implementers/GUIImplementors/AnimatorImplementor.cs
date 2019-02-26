@@ -2,7 +2,7 @@
 
 namespace Svelto.ECS.Example.Survive.Implementors
 {
-    public class AnimatorImplementor : MonoBehaviour, IImplementor, IAnimationComponent
+    public class AnimatorImplementor : MonoBehaviour, IImplementor, IAnimation
     {
         void Awake()
         {
