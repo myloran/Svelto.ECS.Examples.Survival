@@ -193,7 +193,7 @@ namespace Svelto.ECS.Example.Survive
             _enginesRoot.AddEngine(enemyAnimates);
             _enginesRoot.AddEngine(enemyDies);
             //other engines
-            _enginesRoot.AddEngine(new HealthDamages());
+            _enginesRoot.AddEngine(new HealthTakesDamage());
             _enginesRoot.AddEngine(new CameraFollowsTarget(time));
             _enginesRoot.AddEngine(new Dies());
             _enginesRoot.AddEngine(damageTriggersSound);

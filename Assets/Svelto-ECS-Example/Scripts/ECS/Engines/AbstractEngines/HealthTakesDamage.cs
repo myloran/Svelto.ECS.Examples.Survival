@@ -9,7 +9,7 @@ namespace Svelto.ECS.Example.Survive.Characters {
     /// different engines
     /// 
     /// </summary>
-    public class HealthDamages : IQueryingEntitiesEngine {
+    public class HealthTakesDamage : IQueryingEntitiesEngine {
         public IEntitiesDB entitiesDB { set; private get; }
 
         public void Ready() => ApplyDamage().Run();

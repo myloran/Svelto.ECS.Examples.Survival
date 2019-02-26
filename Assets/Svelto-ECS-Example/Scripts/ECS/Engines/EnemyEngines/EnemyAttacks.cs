@@ -2,36 +2,22 @@ using System.Collections;
 using Svelto.Tasks;
 using UnityEngine;
 
-namespace Svelto.ECS.Example.Survive.Characters.Enemies
-{
-    public class EnemyAttacks : Engine<EnemyTarget>, IQueryingEntitiesEngine
-    {
+namespace Svelto.ECS.Example.Survive.Characters.Enemies {
+    public class EnemyAttacks : Engine<EnemyTarget>, IQueryingEntitiesEngine {
         public IEntitiesDB entitiesDB { set; private get; }
 
-        public void Ready()
-        {}
-
-        public EnemyAttacks(ITime time)
-        {
+        public EnemyAttacks(ITime time) {
             _time = time;
             _taskRoutine = TaskRunner.Instance.AllocateNewTaskRoutine(StandardSchedulers.physicScheduler);
-                _taskRoutine.SetEnumerator(CheckIfHittingEnemyTarget());
+            _taskRoutine.SetEnumerator(CheckIfHittingEnemyTarget());
         }
 
-        protected override void Add(ref EnemyTarget view)
-        {
-            _taskRoutine.Start();
-        }
+        public void Ready() { }
+        protected override void Add(ref EnemyTarget view) => _taskRoutine.Start();
+        protected override void Remove(ref EnemyTarget view) => _taskRoutine.Stop();
 
-        protected override void Remove(ref EnemyTarget view)
-        {
-            _taskRoutine.Stop();
-        }
-
-        IEnumerator CheckIfHittingEnemyTarget()
-        {
-            while (true)
-            {
+        IEnumerator CheckIfHittingEnemyTarget() {
+            while (true) {
                 // Pay attention to this bit. The engine is querying a
                 // EnemyTargetEntityView and not a PlayerEntityView.
                 // this is more than a sophistication, it actually the implementation
@@ -39,18 +25,12 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
                 // EntityViews to promote encapsulation and modularity
                 while (entitiesDB.HasAny<Damageable>(ECSGroups.EnemyTargets) == false ||
                        entitiesDB.HasAny<EnemyAttack>(ECSGroups.ActiveEnemies) == false)
-                {
                     yield return null;
-                }
-                
-                int targetsCount;
-                var targetEntities = entitiesDB.QueryEntities<Damageable>(ECSGroups.EnemyTargets,
-                                                                          out targetsCount);
-                
-                int enemiesCount;
-                var enemiesAttackData = entitiesDB.QueryEntities<EnemyAttackStruct>(ECSGroups.ActiveEnemies, out enemiesCount);
-                var enemies = entitiesDB.QueryEntities<EnemyAttack>(ECSGroups.ActiveEnemies, out enemiesCount);
-                
+
+                var damageables = entitiesDB.QueryEntities<Damageable>(ECSGroups.EnemyTargets, out var damageableCount);
+                var attacks = entitiesDB.QueryEntities<EnemyAttackStruct>(ECSGroups.ActiveEnemies, out var enemyCount);
+                var enemies = entitiesDB.QueryEntities<EnemyAttack>(ECSGroups.ActiveEnemies, out enemyCount);
+
                 //this is more complex than needed code is just to show how you can use entity structs
                 //this case is banal, entity structs should be use to handle hundreds or thousands
                 //of entities in a cache friendly and multi threaded code. However entity structs would allow
@@ -58,37 +38,22 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
                 //cases where entity should be built fast! Theoretically is possible to create
                 //a game using only entity structs, but entity structs make sense ONLY if they
                 //hold value types, so they come with a lot of limitations
-                for (int enemyIndex = 0; enemyIndex < enemiesCount; enemyIndex++)
-                {
-                    var enemyAttackEntityView = enemies[enemyIndex];
-                    
-                    enemiesAttackData[enemyIndex].entityInRange = enemyAttackEntityView.targetTrigger.entityInRange;
-                }
+                for (var i = 0; i < enemyCount; i++)
+                    attacks[i].entityInRange = enemies[i].targetTrigger.entityInRange;
 
-                for (int enemyTargetIndex = 0; enemyTargetIndex < targetsCount; enemyTargetIndex++)
-                {
-                    var targetEntityView = targetEntities[enemyTargetIndex];
-
-                    for (int enemyIndex = 0; enemyIndex < enemiesCount; enemyIndex++)
-                    {
-                        if (enemiesAttackData[enemyIndex].entityInRange.collides)
-                        {
-                            //the IEnemyTriggerComponent implementors sets a the collides boolean
-                            //whenever anything enters in the trigger range, but there is not more logic
-                            //we have to check here if the colliding entity is actually an EnemyTarget
-                            if (enemiesAttackData[enemyIndex].entityInRange.otherEntityID == targetEntityView.ID)
-                            {
-                                enemiesAttackData[enemyIndex].timer += _time.deltaTime;
-                                
-                                if (enemiesAttackData[enemyIndex].timer >= enemiesAttackData[enemyIndex].timeBetweenAttack)
-                                {
-                                    enemiesAttackData[enemyIndex].timer = 0.0f;
-                                    
-                                    targetEntities[enemyTargetIndex].damageInfo = new DamageInfo(enemiesAttackData[enemyIndex].attackDamage,
-                                                                                                 Vector3.zero);
-                                }
-                            }
-                        }
+                for (var i = 0; i < damageableCount; i++) {
+                    for (var j = 0; j < enemyCount; j++) {
+                        if (!attacks[j].entityInRange.collides) continue;
+                        //the IEnemyTriggerComponent implementors sets the collides boolean
+                        //whenever anything enters in the trigger range, but there is not more logic
+                        //we have to check here if the colliding entity is actually an EnemyTarget
+                        if (attacks[j].entityInRange.otherEntityID != damageables[i].ID) continue;
+                        
+                        attacks[j].timer += _time.deltaTime;
+                        if (!(attacks[j].timer >= attacks[j].timeBetweenAttack)) continue;
+                        
+                        attacks[j].timer = 0.0f;
+                        damageables[i].damageInfo = new DamageInfo(attacks[j].attackDamage, Vector3.zero);
                     }
                 }
 
@@ -96,8 +61,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
             }
         }
 
-
-        readonly ITime                 _time;
-        readonly ITaskRoutine<IEnumerator>          _taskRoutine;
+        readonly ITime _time;
+        readonly ITaskRoutine<IEnumerator> _taskRoutine;
     }
 }

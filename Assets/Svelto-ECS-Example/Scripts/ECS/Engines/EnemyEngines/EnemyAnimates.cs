@@ -26,13 +26,13 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies {
 
         IEnumerator AnimateOnDamage() {
             while (true) {
-                var damageable = entitiesDB.QueryEntities<Damageable>(ECSGroups.ActiveEnemies, out var count);
+                var damageables = entitiesDB.QueryEntities<Damageable>(ECSGroups.ActiveEnemies, out var count);
                 var enemies = entitiesDB.QueryEntities<EnemyView>(ECSGroups.ActiveEnemies, out count);
 
                 for (var i = 0; i < count; i++) {
-                    if (damageable[i].damaged == false) continue;
+                    if (damageables[i].damaged == false) continue;
 
-                    enemies[i].vfx.position = damageable[i].damageInfo.damagePoint;
+                    enemies[i].vfx.position = damageables[i].damageInfo.damagePoint;
                     enemies[i].vfx.play = true;
                 }
 
