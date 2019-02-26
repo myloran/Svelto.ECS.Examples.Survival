@@ -3,25 +3,20 @@ using UnityEngine;
 using Svelto.Tasks;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player.Gun {
-    public class PlayerGunShooting : Engine<Gun, Player>,
-        IQueryingEntitiesEngine {
+    public class ShootingPlayerGun : Engine<Gun, Player>, IQueryingEntitiesEngine {
         public IEntitiesDB entitiesDB { set; private get; }
 
-        public void Ready() => _taskRoutine.Start();
-
-        public PlayerGunShooting(IRayCaster rayCaster, ITime time) {
+        public ShootingPlayerGun(IRayCaster rayCaster, ITime time) {
             _rayCaster = rayCaster;
             _time = time;
             _taskRoutine = TaskRunner.Instance.AllocateNewTaskRoutine(StandardSchedulers.physicScheduler);
             _taskRoutine.SetEnumerator(Tick());
         }
 
+        public void Ready() => _taskRoutine.Start();
         protected override void Add(ref Gun view) { }
-
         protected override void Remove(ref Gun view) => _taskRoutine.Stop();
-
         protected override void Add(ref Player view) { }
-
         protected override void Remove(ref Player view) => _taskRoutine.Stop();
 
         IEnumerator Tick() {
@@ -31,7 +26,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun {
             }
 
             var guns = entitiesDB.QueryEntities<Gun>(ECSGroups.Player, out _); //never changes
-            var inputs = entitiesDB.QueryEntities<PlayerInput>(ECSGroups.Player, out _); //never change
+            var inputs = entitiesDB.QueryEntities<Input>(ECSGroups.Player, out _); //never change
 
             while (true) {
                 var attributes = guns[0].attributes;
@@ -51,7 +46,6 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun {
         /// <param name="gun"></param>
         void Shoot(Gun gun) {
             var attributes = gun.attributes;
-
             attributes.timer = 0;
 
             var isHit = _rayCaster.CheckHit(attributes.shootRay,

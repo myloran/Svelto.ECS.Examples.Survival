@@ -8,7 +8,7 @@ namespace Svelto.ECS.Example.Survive
     public class PlayerDeathSequencer : Sequencer<PlayerDeathSequencer>
     {
         public void SetSequence(PlayerDeathEngine                     playerDeathEngine,
-                                PlayerMovementEngine playerMovementEngine,
+                                MovingPlayer movingPlayer,
                                 AnimatingPlayer animatingPlayer,
                                 EnemyAnimationEngine enemyAnimationEngine,
                                 DamageSoundEngine damageSoundEngine,
@@ -25,7 +25,7 @@ namespace Svelto.ECS.Example.Survive
                                           //case was not important at all, so stretched!!)
                                           {
                                               {
-                                                  PlayerDeathCondition.Death, playerMovementEngine,
+                                                  PlayerDeathCondition.Death, movingPlayer,
                                                   animatingPlayer,
                                                   enemyAnimationEngine, damageSoundEngine, hudEngine
                                               }

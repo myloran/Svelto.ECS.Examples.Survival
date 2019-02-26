@@ -14,7 +14,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
 			new EntityBuilder<CameraTargetEntityView>(),
 			new EntityBuilder<HealthEntityStruct>(),
 			new EntityBuilder<EnemyTargetEntityViewStruct>(),
-			new EntityBuilder<PlayerInput>()
+			new EntityBuilder<Input>()
 		};
 
 		public IEntityBuilder[] entitiesToBuild
