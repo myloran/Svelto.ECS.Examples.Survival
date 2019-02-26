@@ -45,7 +45,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
             }
         }
 
-        protected override void Add(ref Player _)
+        protected override void Add(ref Player view)
         {
             _taskRoutine.Start();
         }

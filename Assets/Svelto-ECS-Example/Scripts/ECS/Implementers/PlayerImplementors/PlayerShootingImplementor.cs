@@ -12,7 +12,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
         public float               timeBetweenBullets { get { return TimeBetweenBullets; } }
         public float               range              { get { return Range; } }
         public int                 damagePerShot      { get { return DamagePerShot; } }
-        public DispatchOnSet<bool> targetHit          { get { return _targetHit; } }
+        public DispatchOnSet<bool> Bool          { get { return _bool; } }
         public Vector3             lastTargetPosition { set; get; }
 
         public float timer    { get; set; }
@@ -46,7 +46,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
             _gunAudio     = GetComponent<AudioSource>();
             _gunLight     = GetComponent<Light>();
 
-            _targetHit = new DispatchOnSet<bool>(gameObject.GetInstanceID());
+            _bool = new DispatchOnSet<bool>(gameObject.GetInstanceID());
         }
 
         Transform      _transform;
@@ -56,6 +56,6 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
         Light          _gunLight;                  // Reference to the light component.
         float          _effectsDisplayTime = 0.2f; // The proportion of the timeBetweenBullets that the effects will display for.
 
-        DispatchOnSet<bool> _targetHit;
+        DispatchOnSet<bool> _bool;
     }
 }

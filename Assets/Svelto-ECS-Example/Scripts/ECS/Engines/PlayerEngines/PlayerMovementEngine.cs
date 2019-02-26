@@ -9,39 +9,31 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
     {
         public IEntitiesDB entitiesDB { private get; set; }
         
-        public void Ready()
-        {}
+        public void Ready() {}
         
         public PlayerMovementEngine(IRayCaster raycaster, ITime time)
         {
             _rayCaster = raycaster;
             _time = time;
             _taskRoutine = TaskRunner.Instance.AllocateNewTaskRoutine(StandardSchedulers.physicScheduler);
-                _taskRoutine.SetEnumerator(PhysicsTick());
+            _taskRoutine.SetEnumerator(PhysicsTick());
         }
 
-        protected override void Add(ref Player _)
-        {
-            _taskRoutine.Start();
-        }
+        protected override void Add(ref Player view) => _taskRoutine.Start();
 
-        protected override void Remove(ref Player view)
-        {
-            _taskRoutine.Stop();
-        }
-        
+        protected override void Remove(ref Player view) => _taskRoutine.Stop();
+
         IEnumerator PhysicsTick()
         {  
             while (true)
             {
-                int targetsCount;
-                var playerEntityViews = entitiesDB.QueryEntities<Player>(ECSGroups.Player, out targetsCount);
-                var playerInputDatas  = entitiesDB.QueryEntities<PlayerInput>(ECSGroups.Player, out targetsCount);
+                var players = entitiesDB.QueryEntities<Player>(ECSGroups.Player, out var count);
+                var inputs  = entitiesDB.QueryEntities<PlayerInput>(ECSGroups.Player, out count);
 
-                for (int i = 0; i < targetsCount; i++)
+                for (int i = 0; i < count; i++)
                 {
-                    Movement(ref playerInputDatas[i], ref playerEntityViews[i]);
-                    Turning(ref playerInputDatas[i], ref playerEntityViews[i]);
+                    Move(ref players[i], ref inputs[i]);
+                    Turn(ref players[i], ref inputs[i]);
                 }
 
                 yield return null; //don't forget to yield or you will enter in an infinite loop!
@@ -55,21 +47,17 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
         /// entity components, so that here we can use inputComponent instead of
         /// the class Input.
         /// </summary>
+        /// <param name="player"></param>
         /// <param name="playerEntityView"></param>
-        /// <param name="entityView"></param>
-        void Movement(ref PlayerInput playerEntityView, ref Player entityView)
+        void Move(ref Player player, ref PlayerInput playerInput)
         {
-            // Store the input axes.
-            Vector3 input = playerEntityView.input;
-            
-            // Normalise the movement vector and make it proportional to the speed per second.
-            Vector3 movement = input.normalized * entityView.speed.movementSpeed * _time.deltaTime;
+            var input = playerInput.input; //Store the input axes.
+            var movement = input.normalized * player.speed.movementSpeed * _time.deltaTime; //Normalise the movement vector and make it proportional to the speed per second.
 
-            // Move the player to it's current position plus the movement.
-            entityView.transform.position = entityView.position.position + movement;
+            player.transform.position = player.position.position + movement; //Move the player to it's current position plus the movement.
         }
 
-        void Turning(ref PlayerInput playerEntityView, ref Player entityView)
+        void Turn(ref Player entityView, ref PlayerInput playerEntityView)
         {
             // Create a ray from the mouse cursor on screen in the direction of the camera.
             Ray camRay = playerEntityView.camRay;
