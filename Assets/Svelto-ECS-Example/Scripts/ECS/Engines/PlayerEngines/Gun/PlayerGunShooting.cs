@@ -30,15 +30,15 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun {
                 yield return null; //skip a frame
             }
 
-            var gun = entitiesDB.QueryEntities<Gun>(ECSGroups.Player, out _)[0]; //never changes
-            var input = entitiesDB.QueryEntities<PlayerInput>(ECSGroups.Player, out _)[0]; //never change
+            var guns = entitiesDB.QueryEntities<Gun>(ECSGroups.Player, out _); //never changes
+            var inputs = entitiesDB.QueryEntities<PlayerInput>(ECSGroups.Player, out _); //never change
 
             while (true) {
-                var attributes = gun.attributes;
+                var attributes = guns[0].attributes;
                 attributes.timer += _time.deltaTime;
 
-                if (input.fire && attributes.timer >= attributes.timeBetweenBullets)
-                    Shoot(gun);
+                if (inputs[0].fire && attributes.timer >= attributes.timeBetweenBullets)
+                    Shoot(guns[0]);
 
                 yield return null;
             }
