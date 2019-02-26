@@ -4,26 +4,26 @@ using UnityEngine;
 
 namespace Svelto.ECS.Example.Survive.Characters.Enemies
 {
-    public class EnemyAttackEngine : Engine<EnemyTargetEntityViewStruct>, IQueryingEntitiesEngine
+    public class EnemyAttacks : Engine<EnemyTarget>, IQueryingEntitiesEngine
     {
         public IEntitiesDB entitiesDB { set; private get; }
 
         public void Ready()
         {}
 
-        public EnemyAttackEngine(ITime time)
+        public EnemyAttacks(ITime time)
         {
             _time = time;
             _taskRoutine = TaskRunner.Instance.AllocateNewTaskRoutine(StandardSchedulers.physicScheduler);
                 _taskRoutine.SetEnumerator(CheckIfHittingEnemyTarget());
         }
 
-        protected override void Add(ref EnemyTargetEntityViewStruct view)
+        protected override void Add(ref EnemyTarget view)
         {
             _taskRoutine.Start();
         }
 
-        protected override void Remove(ref EnemyTargetEntityViewStruct view)
+        protected override void Remove(ref EnemyTarget view)
         {
             _taskRoutine.Stop();
         }
@@ -37,19 +37,19 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
                 // this is more than a sophistication, it actually the implementation
                 // of the rule that every engine must use its own set of
                 // EntityViews to promote encapsulation and modularity
-                while (entitiesDB.HasAny<DamageableEntityStruct>(ECSGroups.EnemyTargets) == false ||
-                       entitiesDB.HasAny<EnemyAttackEntityView>(ECSGroups.ActiveEnemies) == false)
+                while (entitiesDB.HasAny<Damageable>(ECSGroups.EnemyTargets) == false ||
+                       entitiesDB.HasAny<EnemyAttack>(ECSGroups.ActiveEnemies) == false)
                 {
                     yield return null;
                 }
                 
                 int targetsCount;
-                var targetEntities = entitiesDB.QueryEntities<DamageableEntityStruct>(ECSGroups.EnemyTargets,
+                var targetEntities = entitiesDB.QueryEntities<Damageable>(ECSGroups.EnemyTargets,
                                                                           out targetsCount);
                 
                 int enemiesCount;
                 var enemiesAttackData = entitiesDB.QueryEntities<EnemyAttackStruct>(ECSGroups.ActiveEnemies, out enemiesCount);
-                var enemies = entitiesDB.QueryEntities<EnemyAttackEntityView>(ECSGroups.ActiveEnemies, out enemiesCount);
+                var enemies = entitiesDB.QueryEntities<EnemyAttack>(ECSGroups.ActiveEnemies, out enemiesCount);
                 
                 //this is more complex than needed code is just to show how you can use entity structs
                 //this case is banal, entity structs should be use to handle hundreds or thousands
@@ -62,7 +62,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
                 {
                     var enemyAttackEntityView = enemies[enemyIndex];
                     
-                    enemiesAttackData[enemyIndex].entityInRange = enemyAttackEntityView.targetTriggerComponent.entityInRange;
+                    enemiesAttackData[enemyIndex].entityInRange = enemyAttackEntityView.targetTrigger.entityInRange;
                 }
 
                 for (int enemyTargetIndex = 0; enemyTargetIndex < targetsCount; enemyTargetIndex++)

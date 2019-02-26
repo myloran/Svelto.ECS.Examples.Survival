@@ -124,8 +124,8 @@ namespace Svelto.ECS.Example.Survive
             //in my articles). 2) filter a data token passed as parameter through
             //engines. The ISequencer is also not the common way to communicate
             //between engines
-            PlayerDeathSequencer playerDeathSequence = new PlayerDeathSequencer();
-            EnemyDeathSequencer  enemyDeathSequence  = new EnemyDeathSequencer();
+            var playerDeathFlow = new PlayerDeathFlow();
+            var enemyDeathFlow  = new EnemyDeathFlow();
 
             //wrap non testable unity static classes, so that 
             //can be mocked if needed.
@@ -134,15 +134,15 @@ namespace Svelto.ECS.Example.Survive
 
             //Player related engines. ALL the dependencies must be solved at this point
             //through constructor injection.
-            var playerShootingEngine  = new ShootingPlayerGun(rayCaster, time);
-            var playerMovementEngine  = new MovingPlayer(rayCaster, time);
-            var playerAnimationEngine = new AnimatingPlayer();
-            var playerDeathEngine     = new PlayerDeathEngine(playerDeathSequence, entityFunctions);
+            var playerShootingEngine  = new PlayerGunShoots(rayCaster, time);
+            var playerMovementEngine  = new PlayerMoves(rayCaster, time);
+            var playerAnimationEngine = new PlayerAnimates();
+            var playerDeathEngine     = new PlayerDies(playerDeathFlow, entityFunctions);
 
             //Enemy related engines
-            var enemyAnimationEngine = new EnemyAnimationEngine(time, enemyDeathSequence, entityFunctions);
-            var enemyAttackEngine    = new EnemyAttackEngine(time);
-            var enemyMovementEngine  = new EnemyMovementEngine();
+            var enemyAnimationEngine = new EnemyAnimates(time, enemyDeathFlow, entityFunctions);
+            var enemyAttackEngine    = new EnemyAttacks(time);
+            var enemyMovementEngine  = new EnemyMoves();
 
             //GameObjectFactory allows to create GameObjects without using the Static
             //method GameObject.Instantiate. While it seems a complication
@@ -150,16 +150,16 @@ namespace Svelto.ECS.Example.Survive
             //coupled with hard dependencies references (read my articles to understand
             //how dependency injection works and why solving dependencies
             //with static classes and singletons is a terrible mistake)
-            GameObjectFactory gameObjectFactory = new GameObjectFactory();
+            var gameObjectFactory = new GameObjectFactory();
             //Factory is one of the few patterns that work very well with ECS. Its use is highly encouraged
             IEnemyFactory enemyFactory       = new EnemyFactory(gameObjectFactory, _entityFactory);
-            var           enemySpawnerEngine = new EnemySpawnerEngine(enemyFactory, entityFunctions);
-            var           enemyDeathEngine   = new EnemyDeathEngine(entityFunctions, enemyDeathSequence);
+            var           enemySpawnerEngine = new EnemySpawns(enemyFactory, entityFunctions);
+            var           enemyDeathEngine   = new EnemyDies(entityFunctions, enemyDeathFlow);
 
             //hud and sound engines
-            var hudEngine         = new HUDEngine(time);
-            var damageSoundEngine = new DamageSoundEngine();
-            var scoreEngine       = new ScoreEngine();
+            var hudEngine         = new HUDHandles(time);
+            var damageSoundEngine = new DamageTriggersSound();
+            var scoreEngine       = new ScoreCalculates();
 
             //The ISequencer implementation is very simple, but allows to perform
             //complex concatenation including loops and conditional branching.
@@ -173,14 +173,14 @@ namespace Svelto.ECS.Example.Survive
             //- ensure the order of execution through several steps. Each engine inside each step has the responsibility
             //to trigger the next step through the use of the Next() function
             //- create paths with branches and loop using the Condition parameter.
-            playerDeathSequence.SetSequence(playerDeathEngine,
+            playerDeathFlow.SetSequence(playerDeathEngine,
                                             playerMovementEngine,
                                             playerAnimationEngine,
                                             enemyAnimationEngine,
                                             damageSoundEngine,
                                             hudEngine);
 
-            enemyDeathSequence.SetSequence(enemyDeathEngine, scoreEngine, damageSoundEngine, enemyAnimationEngine,
+            enemyDeathFlow.SetSequence(enemyDeathEngine, scoreEngine, damageSoundEngine, enemyAnimationEngine,
                                            enemySpawnerEngine);
 
 
@@ -189,8 +189,8 @@ namespace Svelto.ECS.Example.Survive
             _enginesRoot.AddEngine(playerMovementEngine);
             _enginesRoot.AddEngine(playerAnimationEngine);
             _enginesRoot.AddEngine(playerShootingEngine);
-            _enginesRoot.AddEngine(new PlayerInputEngine());
-            _enginesRoot.AddEngine(new PlayerGunShootingFXsEngine());
+            _enginesRoot.AddEngine(new PlayerReadsInput());
+            _enginesRoot.AddEngine(new PlayerGunShootsFX());
             _enginesRoot.AddEngine(playerDeathEngine);
 
             //enemy engines
@@ -200,9 +200,9 @@ namespace Svelto.ECS.Example.Survive
             _enginesRoot.AddEngine(enemyAnimationEngine);
             _enginesRoot.AddEngine(enemyDeathEngine);
             //other engines
-            _enginesRoot.AddEngine(new ApplyingDamageToTargetsEngine());
-            _enginesRoot.AddEngine(new CameraFollowTargetEngine(time));
-            _enginesRoot.AddEngine(new CharactersDeathEngine());
+            _enginesRoot.AddEngine(new DamageAppliesToTargets());
+            _enginesRoot.AddEngine(new CameraFollowsTarget(time));
+            _enginesRoot.AddEngine(new Dies());
             _enginesRoot.AddEngine(damageSoundEngine);
             _enginesRoot.AddEngine(hudEngine);
             _enginesRoot.AddEngine(scoreEngine);

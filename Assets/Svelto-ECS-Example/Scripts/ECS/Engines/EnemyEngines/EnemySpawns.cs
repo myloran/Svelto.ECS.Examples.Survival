@@ -5,9 +5,9 @@ using Svelto.Common;
 
 namespace Svelto.ECS.Example.Survive.Characters.Enemies
 {
-    public class EnemySpawnerEngine : IQueryingEntitiesEngine, IStep
+    public class EnemySpawns : IQueryingEntitiesEngine, IStep
     {
-        public EnemySpawnerEngine(IEnemyFactory enemyFactory, IEntityFunctions entityFunctions)
+        public EnemySpawns(IEnemyFactory enemyFactory, IEntityFunctions entityFunctions)
         {
             _entityFunctions = entityFunctions;
             _enemyFactory = enemyFactory;
@@ -78,7 +78,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
                             var fromGroupId = (int) ECSGroups.EnemiesToRecycleGroups +
                                               (int) spawnData.enemySpawnData.targetType;
 
-                            if (entitiesDB.HasAny<EnemyEntityViewStruct>(fromGroupId))
+                            if (entitiesDB.HasAny<EnemyView>(fromGroupId))
                             {
                                 using (profiler.Sample("Recycling"))
                                 {
@@ -119,15 +119,15 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
            
             if (count > 0)
             {
-                var enemystructs = entitiesDB.QueryEntities<EnemyEntityViewStruct>(fromGroupId, out count);
+                var enemystructs = entitiesDB.QueryEntities<EnemyView>(fromGroupId, out count);
                 healths[0].currentHealth = 100;
                 healths[0].dead          = false;
 
                 var spawnInfo = spawnData.enemySpawnData.spawnPoint;
 
                 enemystructs[0].transform.position = spawnInfo;
-                enemystructs[0].movementComponent.navMeshEnabled      = true;
-                enemystructs[0].movementComponent.setCapsuleAsTrigger = false;
+                enemystructs[0].movement.navMeshEnabled      = true;
+                enemystructs[0].movement.setCapsuleAsTrigger = false;
                 enemystructs[0].layerComponent.layer                  = GAME_LAYERS.ENEMY_LAYER;
                 enemystructs[0].animation.reset = true;
                 

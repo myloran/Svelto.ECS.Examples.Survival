@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Svelto.ECS.Example.Survive.Characters.Enemies
 {
-    public class EnemyMovementEngine : IQueryingEntitiesEngine
+    public class EnemyMoves : IQueryingEntitiesEngine
     {
         public IEntitiesDB entitiesDB { set; private get; }
 
@@ -17,15 +17,15 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
             {
                 int count;
                 //query all the enemies from the standard group (no disabled nor respawning)
-                var enemyTargetEntityViews = entitiesDB.QueryEntities<EnemyTargetEntityViewStruct>(ECSGroups.EnemyTargets, out count);
+                var enemyTargetEntityViews = entitiesDB.QueryEntities<EnemyTarget>(ECSGroups.EnemyTargets, out count);
 
                 if (count > 0)
                 {
-                    var enemies = entitiesDB.QueryEntities<EnemyEntityViewStruct>(ECSGroups.ActiveEnemies, out count);
+                    var enemies = entitiesDB.QueryEntities<EnemyView>(ECSGroups.ActiveEnemies, out count);
 
                     for (var i = 0; i < count; i++)
                     {
-                        enemies[i].movementComponent.navMeshDestination =
+                        enemies[i].movement.navMeshDestination =
                             enemyTargetEntityViews[0].targetPosition.position;
                     }
                 }

@@ -9,11 +9,11 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
 		static readonly IEntityBuilder[] _entitiesToBuild =
 		{
 			new EntityBuilder<Player>(),
-			new EntityBuilder<DamageableEntityStruct>(),
+			new EntityBuilder<Damageable>(),
 			new EntityBuilder<DamageSoundEntityView>(),
 			new EntityBuilder<CameraTargetEntityView>(),
 			new EntityBuilder<HealthEntityStruct>(),
-			new EntityBuilder<EnemyTargetEntityViewStruct>(),
+			new EntityBuilder<EnemyTarget>(),
 			new EntityBuilder<Input>()
 		};
 

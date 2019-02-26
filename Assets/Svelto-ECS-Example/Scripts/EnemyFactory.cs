@@ -47,8 +47,8 @@ namespace Svelto.ECS.Example.Survive
                 initializer.Init(enemyAttackstruct);
                 initializer.Init(new HealthEntityStruct {currentHealth  = 100});
                 initializer.Init(new ScoreValueEntityStruct {scoreValue = (int) (enemySpawnData.targetType + 1) * 10});
-                initializer.Init(new EnemyEntityStruct {enemyType       = enemySpawnData.targetType});
-                initializer.Init(new EnemySinkStruct
+                initializer.Init(new Enemy {enemyType       = enemySpawnData.targetType});
+                initializer.Init(new EnemySink
                                      {sinkAnimSpeed = 2.5f}); //being lazy, should come from the json too
 
                 var transform = go.transform;

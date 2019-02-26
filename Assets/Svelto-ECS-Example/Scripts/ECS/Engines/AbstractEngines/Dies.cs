@@ -2,7 +2,7 @@
 
 namespace Svelto.ECS.Example.Survive.Characters
 {
-    public class CharactersDeathEngine:IQueryingEntitiesEngine
+    public class Dies:IQueryingEntitiesEngine
     {
         public void Ready()
         {

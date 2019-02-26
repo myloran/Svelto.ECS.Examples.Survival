@@ -1,6 +1,6 @@
 namespace Svelto.ECS.Example.Survive.HUD
 {
-    public class ScoreEngine : IQueryingEntitiesEngine, IStep
+    public class ScoreCalculates : IQueryingEntitiesEngine, IStep
     {
         public IEntitiesDB entitiesDB { get; set; }
         public void Ready()

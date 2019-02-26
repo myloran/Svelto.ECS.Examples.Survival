@@ -2,10 +2,10 @@ using System.Collections;
 using Svelto.Tasks;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player {
-    public class AnimatingPlayer : Engine<Player>, IQueryingEntitiesEngine, IStep<PlayerDeathCondition> {
+    public class PlayerAnimates : Engine<Player>, IQueryingEntitiesEngine, IStep<PlayerDeathCondition> {
         public IEntitiesDB entitiesDB { get; set; }
 
-        public AnimatingPlayer() {
+        public PlayerAnimates() {
             _taskRoutine = TaskRunner.Instance.AllocateNewTaskRoutine(StandardSchedulers.physicScheduler);
             _taskRoutine.SetEnumerator(PhysicsTick());
         }

@@ -2,7 +2,7 @@ using System;
 
 namespace Svelto.ECS.Example.Survive.Characters.Enemies
 {
-    public struct EnemySinkStruct : IEntityStruct
+    public struct EnemySink : IEntityStruct
     {
         public float    sinkAnimSpeed;
         public DateTime animationTime;

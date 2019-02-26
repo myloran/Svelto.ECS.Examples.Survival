@@ -3,10 +3,10 @@ using UnityEngine;
 using Svelto.Tasks;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player.Gun {
-    public class ShootingPlayerGun : Engine<Gun, Player>, IQueryingEntitiesEngine {
+    public class PlayerGunShoots : Engine<Gun, Player>, IQueryingEntitiesEngine {
         public IEntitiesDB entitiesDB { set; private get; }
 
-        public ShootingPlayerGun(IRayCaster rayCaster, ITime time) {
+        public PlayerGunShoots(IRayCaster rayCaster, ITime time) {
             _rayCaster = rayCaster;
             _time = time;
             _taskRoutine = TaskRunner.Instance.AllocateNewTaskRoutine(StandardSchedulers.physicScheduler);
@@ -59,7 +59,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun {
 
                 if (instanceId != -1) //note how the GameObject GetInstanceID is used to identify the entity as well
                     entitiesDB.ExecuteOnEntity(instanceId, ECSGroups.PlayerTargets, ref damageInfo,
-                        (ref DamageableEntityStruct entity, ref DamageInfo info) => entity.damageInfo = info);
+                        (ref Damageable entity, ref DamageInfo info) => entity.damageInfo = info);
 
                 attributes.lastTargetPosition = point;
             }

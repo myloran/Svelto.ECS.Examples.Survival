@@ -10,7 +10,7 @@ namespace Svelto.ECS.Example.Survive.Characters
     /// different engines
     /// 
     /// </summary>
-    public class ApplyingDamageToTargetsEngine : IQueryingEntitiesEngine
+    public class DamageAppliesToTargets : IQueryingEntitiesEngine
     {
         public void Ready()
         {
@@ -27,7 +27,7 @@ namespace Svelto.ECS.Example.Survive.Characters
                 foreach (var group in ECSGroups.TargetGroups)
                 {
                     int count;
-                    var damagedEntites = entitiesDB.QueryEntities<DamageableEntityStruct>(group, out count);
+                    var damagedEntites = entitiesDB.QueryEntities<Damageable>(group, out count);
                     var entitiesHealth = entitiesDB.QueryEntities<HealthEntityStruct>(group, out count);
 
                     for (int i = 0; i < count; i++)

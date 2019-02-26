@@ -2,14 +2,14 @@ using UnityEngine;
 
 namespace Svelto.ECS.Example.Survive.Characters.Enemies
 {
-    public interface IEnemyMovementComponent: IComponent
+    public interface IEnemyMovement: IComponent
     {
         bool navMeshEnabled {  set; get; }
         Vector3 navMeshDestination { set; }
         bool setCapsuleAsTrigger { set; }
     }
 
-    public interface IEnemyTriggerComponent: IComponent
+    public interface IEnemyTrigger: IComponent
     {
         EnemyCollisionData entityInRange { get; }
     }
@@ -26,7 +26,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
         }
     }
 
-    public interface IEnemyVFXComponent: IComponent
+    public interface IEnemyVFX: IComponent
     {
         Vector3 position { set; }
         bool    play     { set; }

@@ -7,9 +7,9 @@ namespace Svelto.ECS.Example.Survive.Camera
     //First step identify the entity type we want the engine to handle: CameraEntity
     //Second step name the engine according the behaviour and the entity: I.E.: CameraFollowTargetEngine
     //Third step start to write the code and create classes/fields as needed using refactoring tools 
-    public class CameraFollowTargetEngine : Engine<CameraEntityView, CameraTargetEntityView>, IQueryingEntitiesEngine
+    public class CameraFollowsTarget : Engine<CameraEntityView, CameraTargetEntityView>, IQueryingEntitiesEngine
     {
-        public CameraFollowTargetEngine(ITime time)
+        public CameraFollowsTarget(ITime time)
         {
             _time = time;
             _taskRoutine = TaskRunner.Instance.AllocateNewTaskRoutine(StandardSchedulers.physicScheduler);

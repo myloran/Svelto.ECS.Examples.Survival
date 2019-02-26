@@ -7,11 +7,11 @@ using UnityEngine.SceneManagement;
 
 namespace Svelto.ECS.Example.Survive.HUD
 {
-    public class HUDEngine : IQueryingEntitiesEngine, IStep<PlayerDeathCondition>
+    public class HUDHandles : IQueryingEntitiesEngine, IStep<PlayerDeathCondition>
     {
         public IEntitiesDB entitiesDB { set; private get; }
 
-        public HUDEngine(ITime time)
+        public HUDHandles(ITime time)
         {
             _time = time;
         }
@@ -54,7 +54,7 @@ namespace Svelto.ECS.Example.Survive.HUD
             {
                 int numberOfPlayers;
                 var damageablePlayerEntities =
-                    entitiesDB.QueryEntities<DamageableEntityStruct>(ECSGroups.Player, out numberOfPlayers);
+                    entitiesDB.QueryEntities<Damageable>(ECSGroups.Player, out numberOfPlayers);
                 var playerHealthEntities =
                     entitiesDB.QueryEntities<HealthEntityStruct>(ECSGroups.Player, out numberOfPlayers);
                 for (int i = 0; i < numberOfPlayers; i++)

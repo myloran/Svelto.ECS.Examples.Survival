@@ -9,7 +9,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
     //and change data according the Unity callback. Logic should not be used inside these callback,
     //except setting entity components data.
     //This is the case when implementor can and should be Monobehaviours. Here an example:
-    public class EnemyTriggerImplementor : MonoBehaviour, IImplementor, IEnemyTriggerComponent
+    public class EnemyTriggerImplementor : MonoBehaviour, IImplementor, IEnemyTrigger
     {
         public EnemyCollisionData entityInRange { get; private set; }
 

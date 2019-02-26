@@ -6,15 +6,15 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
     public class EnemyEntityDescriptor : IEntityDescriptor
     {
         static readonly IEntityBuilder[] _entitiesToBuild = {
-                                                                new EntityBuilder <EnemyEntityStruct>(),
-                                                                new EntityBuilder <EnemyEntityViewStruct>(),
-                                                                new EntityBuilder <EnemyAttackEntityView>(),
+                                                                new EntityBuilder <Enemy>(),
+                                                                new EntityBuilder <EnemyView>(),
+                                                                new EntityBuilder <EnemyAttack>(),
                                                                 new EntityBuilder <DamageSoundEntityView>(),
                                                                 new EntityBuilder <EnemyAttackStruct>(),
                                                                 new EntityBuilder <HealthEntityStruct>(),
                                                                 new EntityBuilder <ScoreValueEntityStruct>(),
-                                                                new EntityBuilder<EnemySinkStruct>(), 
-                                                                new EntityBuilder <DamageableEntityStruct>()};
+                                                                new EntityBuilder<EnemySink>(), 
+                                                                new EntityBuilder <Damageable>()};
         public IEntityBuilder[] entitiesToBuild
         {
             get { return _entitiesToBuild; }

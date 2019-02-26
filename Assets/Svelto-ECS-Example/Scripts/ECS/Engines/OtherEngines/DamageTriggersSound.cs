@@ -3,7 +3,7 @@ using Svelto.ECS.Example.Survive.Characters.Player;
 
 namespace Svelto.ECS.Example.Survive.Characters.Sounds
 {
-    public class DamageSoundEngine : IQueryingEntitiesEngine, IStep<PlayerDeathCondition>, IStep
+    public class DamageTriggersSound : IQueryingEntitiesEngine, IStep<PlayerDeathCondition>, IStep
     {
         public IEntitiesDB entitiesDB { set; private get; }
 
@@ -27,7 +27,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Sounds
                 foreach (var group in ECSGroups.DamageableGroups)
                 {
                     int count;
-                    var damageableEntities = entitiesDB.QueryEntities<DamageableEntityStruct>(group, out count);
+                    var damageableEntities = entitiesDB.QueryEntities<Damageable>(group, out count);
                     var damageSounds       = entitiesDB.QueryEntities<DamageSoundEntityView>(group, out count);
                     for (int i = 0; i < count; i++)
                     {

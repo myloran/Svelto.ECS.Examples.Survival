@@ -1,9 +1,9 @@
 namespace Svelto.ECS.Example.Survive.Characters.Enemies
 {
-    public struct EnemyEntityViewStruct:IEntityViewStruct
+    public struct EnemyView:IEntityViewStruct
     {
-        public IEnemyMovementComponent    movementComponent;
-        public IEnemyVFXComponent         vfxComponent;
+        public IEnemyMovement    movement;
+        public IEnemyVFX         vfx;
     
         public IAnimation        animation;
         public ITransform        transform;
@@ -13,13 +13,13 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
         public EGID ID { get; set; }
     }
 
-    public struct EnemyAttackEntityView:IEntityViewStruct
+    public struct EnemyAttack:IEntityViewStruct
     {
-        public IEnemyTriggerComponent    targetTriggerComponent;
+        public IEnemyTrigger    targetTrigger;
         public EGID ID { get; set; }
     }
 
-    public struct EnemyTargetEntityViewStruct : IEntityViewStruct
+    public struct EnemyTarget : IEntityViewStruct
     {
         public IPosition targetPosition;
         public EGID ID { get; set; }

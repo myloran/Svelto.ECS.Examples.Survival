@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Svelto.ECS.Example.Survive.Characters.Enemies
 {
     public class EnemyVFXImplementor : MonoBehaviour, IImplementor, 
-        IEnemyVFXComponent
+        IEnemyVFX
     {
         void Awake ()
         {

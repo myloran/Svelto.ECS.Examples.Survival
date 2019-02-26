@@ -2,13 +2,13 @@
 
 namespace Svelto.ECS.Example.Survive.Characters.Enemies
 {
-    public class EnemyDeathEngine : IQueryingEntitiesEngine
+    public class EnemyDies : IQueryingEntitiesEngine
     {
-        public EnemyDeathEngine(IEntityFunctions entityFunctions, EnemyDeathSequencer enemyDeadSequencer)
+        public EnemyDies(IEntityFunctions entityFunctions, EnemyDeathFlow enemyDeadFlow)
         {
             _entityFunctions = entityFunctions;
 
-            _enemyDeadSequencer = enemyDeadSequencer;
+            _enemyDeadFlow = enemyDeadFlow;
         }
 
         public IEntitiesDB entitiesDB { get; set; }
@@ -23,14 +23,14 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
             while (true)
             {
                 //wait for enemies to be created
-                while (entitiesDB.HasAny<EnemyEntityStruct>(ECSGroups.ActiveEnemies) == false) yield return null;
+                while (entitiesDB.HasAny<Enemy>(ECSGroups.ActiveEnemies) == false) yield return null;
 
                 //Groups affect the memory layour. Entity views are split according groups, so that even if entity
                 //views are used by entities outside a specific group, those entity views won't be present 
                 //in the array returned by QueryEntities.
                 int count;
                 var enemyEntitiesViews =
-                    entitiesDB.QueryEntities<EnemyEntityViewStruct>(ECSGroups.ActiveEnemies, out count);
+                    entitiesDB.QueryEntities<EnemyView>(ECSGroups.ActiveEnemies, out count);
                 var enemyEntitiesHealth =
                     entitiesDB.QueryEntities<HealthEntityStruct>(ECSGroups.ActiveEnemies, out count);
 
@@ -40,7 +40,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
 
                     SetParametersForDeath(ref enemyEntitiesViews[index]);
                     
-                    _enemyDeadSequencer.Next(this, enemyEntitiesViews[index].ID);
+                    _enemyDeadFlow.Next(this, enemyEntitiesViews[index].ID);
 
                     _entityFunctions.SwapEntityGroup<EnemyEntityDescriptor>(enemyEntitiesViews[index].ID, ECSGroups.DeadEnemiesGroups);
                 }
@@ -49,14 +49,14 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
             }
         }
 
-        static void SetParametersForDeath(ref EnemyEntityViewStruct enemyEntityViewStruct)
+        static void SetParametersForDeath(ref EnemyView enemyView)
         {
-            enemyEntityViewStruct.layerComponent.layer                  = GAME_LAYERS.NOT_SHOOTABLE_MASK;
-            enemyEntityViewStruct.movementComponent.navMeshEnabled      = false;
-            enemyEntityViewStruct.movementComponent.setCapsuleAsTrigger = true;
+            enemyView.layerComponent.layer                  = GAME_LAYERS.NOT_SHOOTABLE_MASK;
+            enemyView.movement.navMeshEnabled      = false;
+            enemyView.movement.setCapsuleAsTrigger = true;
         }
 
         readonly IEntityFunctions    _entityFunctions;
-        readonly EnemyDeathSequencer _enemyDeadSequencer;
+        readonly EnemyDeathFlow _enemyDeadFlow;
     }
 }

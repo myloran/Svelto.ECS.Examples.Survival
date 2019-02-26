@@ -5,29 +5,29 @@ using Svelto.ECS.Example.Survive.HUD;
 
 namespace Svelto.ECS.Example.Survive
 {
-    public class PlayerDeathSequencer : Sequencer<PlayerDeathSequencer>
+    public class PlayerDeathFlow : Flow<PlayerDeathFlow>
     {
-        public void SetSequence(PlayerDeathEngine                     playerDeathEngine,
-                                MovingPlayer movingPlayer,
-                                AnimatingPlayer animatingPlayer,
-                                EnemyAnimationEngine enemyAnimationEngine,
-                                DamageSoundEngine damageSoundEngine,
-                                HUDEngine hudEngine)
+        public void SetSequence(PlayerDies                     playerDies,
+                                PlayerMoves playerMoves,
+                                PlayerAnimates playerAnimates,
+                                EnemyAnimates enemyAnimates,
+                                DamageTriggersSound damageTriggersSound,
+                                HUDHandles hudHandles)
         {
             base.SetSequence(
                              new Steps //sequence of steps, this is a dictionary!
                                  (
                                   new Step
                                   {
-                                      from = playerDeathEngine, //when the player dies
+                                      from = playerDies, //when the player dies
                                       to = new To<PlayerDeathCondition>
                                           //all these engines in the list will be called in order (which in this 
                                           //case was not important at all, so stretched!!)
                                           {
                                               {
-                                                  PlayerDeathCondition.Death, movingPlayer,
-                                                  animatingPlayer,
-                                                  enemyAnimationEngine, damageSoundEngine, hudEngine
+                                                  PlayerDeathCondition.Death, playerMoves,
+                                                  playerAnimates,
+                                                  enemyAnimates, damageTriggersSound, hudHandles
                                               }
                                           }
                                   }

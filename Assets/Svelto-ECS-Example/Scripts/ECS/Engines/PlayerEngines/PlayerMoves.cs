@@ -3,10 +3,10 @@ using Svelto.Tasks;
 using UnityEngine;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player {
-    public class MovingPlayer : Engine<Player>, IQueryingEntitiesEngine, IStep<PlayerDeathCondition> {
+    public class PlayerMoves : Engine<Player>, IQueryingEntitiesEngine, IStep<PlayerDeathCondition> {
         public IEntitiesDB entitiesDB { private get; set; }
 
-        public MovingPlayer(IRayCaster raycaster, ITime time) {
+        public PlayerMoves(IRayCaster raycaster, ITime time) {
             _rayCaster = raycaster;
             _time = time;
             _taskRoutine = TaskRunner.Instance.AllocateNewTaskRoutine(StandardSchedulers.physicScheduler);
@@ -39,7 +39,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player {
         /// the class Input.
         /// </summary>
         /// <param name="player"></param>
-        /// <param name="playerEntityView"></param>
+        /// <param name="input"></param>
         void Move(ref Player player, ref Input input) {
             var movement = input.value.normalized * player.speed.movementSpeed * _time.deltaTime; //Normalise the movement vector and make it proportional to the speed per second.
             

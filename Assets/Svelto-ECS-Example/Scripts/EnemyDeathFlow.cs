@@ -4,35 +4,35 @@ using Svelto.ECS.Example.Survive.HUD;
 
 namespace Svelto.ECS.Example.Survive
 {
-    public class EnemyDeathSequencer : Sequencer<EnemyDeathSequencer>
+    public class EnemyDeathFlow : Flow<EnemyDeathFlow>
     {
-        public void SetSequence(EnemyDeathEngine     enemyDeathEngine, 
-                                ScoreEngine          scoreEngine, 
-                                DamageSoundEngine    damageSoundEngine, 
-                                EnemyAnimationEngine enemyAnimationEngine, 
-                                EnemySpawnerEngine   enemySpawnerEngine)
+        public void SetSequence(EnemyDies     enemyDies, 
+                                ScoreCalculates          scoreCalculates, 
+                                DamageTriggersSound    damageTriggersSound, 
+                                EnemyAnimates enemyAnimates, 
+                                EnemySpawns   enemySpawns)
         {
             base.SetSequence(
                              new Steps //sequence of steps, this is a dictionary!
                                  (
                                   new Step
                                   {
-                                      @from = enemyDeathEngine,
+                                      @from = enemyDies,
                                       to = new To
                                           (
                                            //TIP: use GO To Type Declaration to go directly to the Class code of the 
                                            //engine instance
-                                           scoreEngine, damageSoundEngine
+                                           scoreCalculates, damageTriggersSound
                                           )
                                   },
                                   new Step
                                   {
                                       //second step
-                                      @from = enemyAnimationEngine, 
+                                      @from = enemyAnimates, 
                                       //after the death animation is actually finished
                                       to = new To
                                           (
-                                           enemySpawnerEngine //call the spawner engine
+                                           enemySpawns //call the spawner engine
                                           )
                                   }
                                  )
