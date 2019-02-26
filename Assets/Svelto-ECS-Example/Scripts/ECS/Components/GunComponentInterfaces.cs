@@ -12,9 +12,9 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
         Vector3 lastTargetPosition { get; set; }
     }
 
-    public interface IGunHitTarget : IComponent
+    public interface IIsHit : IComponent
     {
-        DispatchOnSet<bool> targetHit { get; }
+        DispatchOnSet<bool> Bool { get; }
     }
 
     public interface IFX: IComponent

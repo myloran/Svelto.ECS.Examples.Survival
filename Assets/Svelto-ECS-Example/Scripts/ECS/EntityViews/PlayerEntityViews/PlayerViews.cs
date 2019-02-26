@@ -17,7 +17,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
     {
         public IAttributes   attributes;
         public IFX           fx;
-        public IGunHitTarget    gunHitTarget;
+        public IIsHit    isHit;
         public EGID ID { get; set; }
     }
 }

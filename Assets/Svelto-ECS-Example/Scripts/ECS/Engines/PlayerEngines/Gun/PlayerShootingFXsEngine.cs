@@ -6,7 +6,7 @@ using Svelto.Tasks.Enumerators;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
 {
-    public class PlayerGunShootingFXsEngine : SingleEntityEngine<Gun>, IQueryingEntitiesEngine
+    public class PlayerGunShootingFXsEngine : Engine<Gun>, IQueryingEntitiesEngine
     {
         public IEntitiesDB entitiesDB { set; private get; }
 
@@ -23,15 +23,15 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun
         /// is not necessary. Do it only if you find convenient, otherwise
         /// querying is always cleaner.
         /// </summary>
-        /// <param name="playerGunEntityView"></param>
-        protected override void Add(ref Gun playerGunEntityView)
+        /// <param name="view"></param>
+        protected override void Add(ref Gun view)
         {
-            playerGunEntityView.gunHitTarget.targetHit.NotifyOnValueSet(PlayerHasShot);
+            view.isHit.Bool.NotifyOnValueSet(PlayerHasShot);
             
-            _waitForSeconds = new WaitForSecondsEnumerator(playerGunEntityView.attributes.timeBetweenBullets * playerGunEntityView.fx.effectsDisplayTime);
+            _waitForSeconds = new WaitForSecondsEnumerator(view.attributes.timeBetweenBullets * view.fx.effectsDisplayTime);
         }
 
-        protected override void Remove(ref Gun playerGunEntityView)
+        protected override void Remove(ref Gun view)
         {}
 
         void PlayerHasShot(int ID, bool targetHasBeenHit)

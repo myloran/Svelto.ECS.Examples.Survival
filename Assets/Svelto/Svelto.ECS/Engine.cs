@@ -2,28 +2,40 @@ using Svelto.ECS.Internal;
 
 namespace Svelto.ECS
 {
-    public abstract class Engine<T, U> : SingleEntityEngine<T>, IHandleEntityStructEngine<U>
+    public abstract class Engine<T> : EngineInfo, IHandleEntityStructEngine<T> where T : IEntityStruct
+    {
+        public void AddInternal(ref T view)
+        { Add(ref view); }
+
+        public void RemoveInternal(ref T view)
+        { Remove(ref view); }
+
+        protected abstract void Add(ref    T view);
+        protected abstract void Remove(ref T view);
+    }
+    
+    public abstract class Engine<T, U> : Engine<T>, IHandleEntityStructEngine<U>
         where U : IEntityStruct where T : IEntityStruct
     {
-        public void AddInternal(ref U entityView)
-        { Add(ref entityView); }
-        public void RemoveInternal(ref U entityView)
-        { Remove(ref entityView); }
+        public void AddInternal(ref U view)
+        { Add(ref view); }
+        public void RemoveInternal(ref U view)
+        { Remove(ref view); }
         
-        protected abstract void Add(ref U    entityView);
-        protected abstract void Remove(ref U entityView);
+        protected abstract void Add(ref U    view);
+        protected abstract void Remove(ref U view);
     }
     
     public abstract class Engine<T, U, V> : Engine<T, U>, IHandleEntityStructEngine<V>
         where V :  IEntityStruct where U :  IEntityStruct where T :  IEntityStruct
     {
-        public void AddInternal(ref V entityView)
-        { Add(ref entityView); }
-        public void RemoveInternal(ref V entityView)
-        { Remove(ref entityView); }
+        public void AddInternal(ref V view)
+        { Add(ref view); }
+        public void RemoveInternal(ref V view)
+        { Remove(ref view); }
         
-        protected abstract void Add(ref V    entityView);
-        protected abstract void Remove(ref V entityView);
+        protected abstract void Add(ref V    view);
+        protected abstract void Remove(ref V view);
     }
 
     /// <summary>
@@ -33,12 +45,12 @@ namespace Svelto.ECS
     public abstract class Engine<T, U, V, W> : Engine<T, U, V>, IHandleEntityStructEngine<W>
         where W :  IEntityStruct where V :  IEntityStruct where U :  IEntityStruct where T : IEntityStruct
     {
-        public void AddInternal(ref W entityView)
-        { Add(ref entityView); }
-        public void RemoveInternal(ref W entityView)
-        { Remove(ref entityView); }
+        public void AddInternal(ref W view)
+        { Add(ref view); }
+        public void RemoveInternal(ref W view)
+        { Remove(ref view); }
         
-        protected abstract void Add(ref W    entityView);
-        protected abstract void Remove(ref W entityView);
+        protected abstract void Add(ref W    view);
+        protected abstract void Remove(ref W view);
     }
 }

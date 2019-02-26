@@ -3,7 +3,7 @@ using Svelto.Tasks;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player
 {
-    public class PlayerAnimationEngine : SingleEntityEngine<Player>, IQueryingEntitiesEngine, IStep<PlayerDeathCondition>
+    public class AnimatingPlayer : Engine<Player>, IQueryingEntitiesEngine, IStep<PlayerDeathCondition>
     {
         public IEntitiesDB entitiesDB { get; set; }
         public void Ready()
@@ -11,7 +11,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
             _taskRoutine.Start();
         }
         
-        public PlayerAnimationEngine()
+        public AnimatingPlayer()
         {
             _taskRoutine = TaskRunner.Instance.AllocateNewTaskRoutine(StandardSchedulers.physicScheduler);
                 _taskRoutine.SetEnumerator(PhysicsTick());
@@ -51,10 +51,10 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
             playerEntityViews[index].animation.playAnimation = "Die";
         }
 
-        protected override void Add(ref Player entityView)
+        protected override void Add(ref Player view)
         {}
 
-        protected override void Remove(ref Player entityView)
+        protected override void Remove(ref Player view)
         {
             _taskRoutine.Stop();
         }

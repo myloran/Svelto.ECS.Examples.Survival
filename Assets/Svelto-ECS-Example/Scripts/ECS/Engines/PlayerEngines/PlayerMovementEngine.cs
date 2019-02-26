@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Svelto.ECS.Example.Survive.Characters.Player
 {
-    public class PlayerMovementEngine : SingleEntityEngine<Player>, IQueryingEntitiesEngine,
+    public class PlayerMovementEngine : Engine<Player>, IQueryingEntitiesEngine,
                                         IStep<PlayerDeathCondition>
     {
         public IEntitiesDB entitiesDB { private get; set; }
@@ -20,12 +20,12 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
                 _taskRoutine.SetEnumerator(PhysicsTick());
         }
 
-        protected override void Add(ref Player entityView)
+        protected override void Add(ref Player _)
         {
             _taskRoutine.Start();
         }
 
-        protected override void Remove(ref Player entityView)
+        protected override void Remove(ref Player view)
         {
             _taskRoutine.Stop();
         }
