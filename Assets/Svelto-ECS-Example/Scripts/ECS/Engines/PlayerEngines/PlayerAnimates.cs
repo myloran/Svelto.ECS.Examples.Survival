@@ -15,7 +15,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player {
         protected override void Remove(ref Player view) => _taskRoutine.Stop();
 
         IEnumerator PhysicsTick() {
-            while (entitiesDB.HasAny<Player>(ECSGroups.Player) == false) //wait for the player to spawn
+            while (!entitiesDB.HasAny<Player>(ECSGroups.Player)) //wait for the player to spawn
                 yield return null; //skip a frame
 
             var players = entitiesDB.QueryEntities<Player>(ECSGroups.Player, out _);

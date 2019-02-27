@@ -9,10 +9,10 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies
                                                                 new EntityBuilder <Enemy>(),
                                                                 new EntityBuilder <EnemyView>(),
                                                                 new EntityBuilder <EnemyAttack>(),
-                                                                new EntityBuilder <DamageSoundEntityView>(),
+                                                                new EntityBuilder <DamageSound>(),
                                                                 new EntityBuilder <EnemyAttackStruct>(),
                                                                 new EntityBuilder <Health>(),
-                                                                new EntityBuilder <ScoreValueEntityStruct>(),
+                                                                new EntityBuilder <Score>(),
                                                                 new EntityBuilder<EnemySink>(), 
                                                                 new EntityBuilder <Damageable>()};
         public IEntityBuilder[] entitiesToBuild

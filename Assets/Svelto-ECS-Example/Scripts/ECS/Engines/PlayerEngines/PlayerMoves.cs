@@ -42,7 +42,6 @@ namespace Svelto.ECS.Example.Survive.Characters.Player {
         /// <param name="input"></param>
         void Move(ref Player player, ref Input input) {
             var movement = input.value.normalized * player.speed.movementSpeed * _time.deltaTime; //Normalise the movement vector and make it proportional to the speed per second.
-            
             player.transform.position = player.position.position + movement; //Move the player to it's current position plus the movement.
         }
 
@@ -60,12 +59,10 @@ namespace Svelto.ECS.Example.Survive.Characters.Player {
             player.body.isKinematic = true;
         }
 
-        readonly int floorMask = LayerMask.GetMask("Floor"); //A layer mask so that a ray can be cast just at gameobjects on the floor layer.
-
         const float camRayLength = 100f; //The length of the ray from the camera into the scene.
-
         readonly IRayCaster _rayCaster;
         readonly ITaskRoutine<IEnumerator> _taskRoutine;
         readonly ITime _time;
+        readonly int floorMask = LayerMask.GetMask("Floor"); //A layer mask so that a ray can be cast just at gameobjects on the floor layer.
     }
 }

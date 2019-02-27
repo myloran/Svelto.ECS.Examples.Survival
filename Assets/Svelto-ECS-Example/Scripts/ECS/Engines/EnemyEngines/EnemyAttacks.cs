@@ -23,8 +23,8 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies {
                 // this is more than a sophistication, it actually the implementation
                 // of the rule that every engine must use its own set of
                 // EntityViews to promote encapsulation and modularity
-                while (entitiesDB.HasAny<Damageable>(ECSGroups.EnemyTargets) == false ||
-                       entitiesDB.HasAny<EnemyAttack>(ECSGroups.ActiveEnemies) == false)
+                while (!entitiesDB.HasAny<Damageable>(ECSGroups.EnemyTargets) ||
+                       !entitiesDB.HasAny<EnemyAttack>(ECSGroups.ActiveEnemies))
                     yield return null;
 
                 var damageables = entitiesDB.QueryEntities<Damageable>(ECSGroups.EnemyTargets, out var damageableCount);

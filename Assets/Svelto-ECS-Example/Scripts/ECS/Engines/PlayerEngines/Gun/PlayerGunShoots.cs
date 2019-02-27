@@ -20,10 +20,9 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun {
         protected override void Remove(ref Player view) => _taskRoutine.Stop();
 
         IEnumerator Tick() {
-            while (entitiesDB.HasAny<Player>(ECSGroups.Player) == false ||
-                   entitiesDB.HasAny<Gun>(ECSGroups.Player) == false) {
+            while (!entitiesDB.HasAny<Player>(ECSGroups.Player) ||
+                   !entitiesDB.HasAny<Gun>(ECSGroups.Player))
                 yield return null; //skip a frame
-            }
 
             var guns = entitiesDB.QueryEntities<Gun>(ECSGroups.Player, out _); //never changes
             var inputs = entitiesDB.QueryEntities<Input>(ECSGroups.Player, out _); //never change

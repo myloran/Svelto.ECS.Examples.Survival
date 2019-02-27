@@ -10,7 +10,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player
 		{
 			new EntityBuilder<Player>(),
 			new EntityBuilder<Damageable>(),
-			new EntityBuilder<DamageSoundEntityView>(),
+			new EntityBuilder<DamageSound>(),
 			new EntityBuilder<CameraTargetEntityView>(),
 			new EntityBuilder<Health>(),
 			new EntityBuilder<EnemyTarget>(),

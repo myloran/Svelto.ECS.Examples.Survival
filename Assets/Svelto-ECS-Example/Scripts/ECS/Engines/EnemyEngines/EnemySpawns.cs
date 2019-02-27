@@ -27,7 +27,6 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies {
 //to use will never change            
             var spawns = ReadEnemySpawns();
             var attacks = ReadEnemyAttacks();
-
             var spawningTimes = new float[spawns.Length];
 
             for (var i = spawns.Length - 1; i >= 0 && _numberOfEnemyToSpawn > 0; --i)
@@ -42,6 +41,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies {
                 yield return _waitForSecondsEnumerator;
 
                 var profiler = new PlatformProfiler();
+                
                 using (profiler.StartNewSession("EnemySpawning")) {
                     for (var i = spawns.Length - 1; i >= 0 && _numberOfEnemyToSpawn > 0; --i) { //cycle around the enemies to spawn and check if it can be spawned
                         if (spawningTimes[i] <= 0.0f) {

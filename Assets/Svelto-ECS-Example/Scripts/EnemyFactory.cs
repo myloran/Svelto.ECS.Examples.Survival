@@ -17,6 +17,7 @@ namespace Svelto.ECS.Example.Survive {
             // Find a random index between zero and one less than the number of spawn points.
             // Create an instance of the enemy prefab at the randomly selected spawn point position and rotation.
             var profiler = new PlatformProfiler();
+            
             using (profiler.StartNewSession("BuildEnemy")) {
                 GameObject go;
                 using (profiler.Sample("Build GameObject"))
@@ -35,7 +36,7 @@ namespace Svelto.ECS.Example.Survive {
 
                 initializer.Init(enemyAttackstruct);
                 initializer.Init(new Health {current = 100});
-                initializer.Init(new ScoreValueEntityStruct {scoreValue = (int) (enemySpawnData.targetType + 1) * 10});
+                initializer.Init(new Score {score = (int) (enemySpawnData.targetType + 1) * 10});
                 initializer.Init(new Enemy {enemyType = enemySpawnData.targetType});
                 initializer.Init(new EnemySink{sinkAnimSpeed = 2.5f}); //being lazy, should come from the json too
 
