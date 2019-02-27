@@ -1,5 +1,3 @@
-using Svelto.ECS.Unity;
-
 namespace Svelto.ECS
 {
     /// <summary>
@@ -58,7 +56,7 @@ namespace Svelto.ECS
                                                T        descriptorEntity,
                                                object[] implementors = null)
             where T : IEntityDescriptor;
-        EntityStructInitializer BuildEntity<T>(EGID egid, T entityDescriptor, IImplementor[] implementors = null)
+        EntityStructInitializer BuildEntity<T>(EGID egid, T entityDescriptor, object[] implementors = null)
             where T : IEntityDescriptor;
     }
 }

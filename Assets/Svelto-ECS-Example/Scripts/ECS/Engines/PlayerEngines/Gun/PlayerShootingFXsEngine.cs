@@ -23,7 +23,6 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun {
         /// <param name="view"></param>
         protected override void Add(ref Gun view) {
             view.isHit.Bool.NotifyOnValueSet(PlayerHasShot);
-
             _waitForSeconds = new WaitForSecondsEnumerator(view.attributes.timeBetweenBullets * view.fx.effectsDisplayTime);
         }
 
@@ -46,13 +45,13 @@ namespace Svelto.ECS.Example.Survive.Characters.Player.Gun {
                 fx.lineEndPosition = attributes.lastTargetPosition; //Set the second position of the line renderer to the point the raycast hit.                                                              
             else
                 fx.lineEndPosition = shootRay.origin + shootRay.direction * attributes.range; //... set the second position of the line renderer to the fullest extent of the gun's range.
-            
+
             _taskRoutine.Start();
         }
 
         IEnumerator DisableFxAfterTime() {
             yield return _waitForSeconds;
-            
+
             DisableEffects(); //... disable the effects.
         }
 

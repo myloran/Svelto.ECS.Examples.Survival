@@ -1,29 +1,21 @@
 ﻿using System.Collections;
 
-namespace Svelto.ECS.Example.Survive.Characters
-{
-    public class Dies:IQueryingEntitiesEngine
-    {
-        public void Ready()
-        {
-            CheckEnergy().Run();
-        }
+namespace Svelto.ECS.Example.Survive.Characters {
+    public class HealthDies : IQueryingEntitiesEngine {
+        public IEntitiesDB entitiesDB { set; private get; }
+        
+        public void Ready() => CheckHealth().Run();
 
-        IEnumerator CheckEnergy()
-        {
-            while (true)
-            {
+        IEnumerator CheckHealth() {
+            while (true) {
                 entitiesDB.ExecuteOnAllEntities(ECSGroups.DamageableGroups,
-                                                (ref Health health, IEntitiesDB entitiesdb, int index) =>
-                        {
-                            if (health.current <= 0)
-                                health.dead = true;
-                        });
+                    (ref Health health, IEntitiesDB _, int __) => {
+                        if (health.current <= 0)
+                            health.dead = true;
+                    });
 
                 yield return null;
             }
         }
-
-        public IEntitiesDB entitiesDB { set; private get; }
     }
 }

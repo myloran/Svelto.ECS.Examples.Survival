@@ -22,25 +22,21 @@ using Svelto.Tasks;
 //For example a factory is a composition root.
 //Furthermore an application can have more than a context
 //but this is more advanced and not part of this demo
-namespace Svelto.ECS.Example.Survive
-{
+namespace Svelto.ECS.Example.Survive {
     /// <summary>
     ///IComposition root is part of Svelto.Context
     ///Svelto.Context is not formally part of Svelto.ECS, but
     ///it's helpful to use in an environment where a Context is
     ///not formally present, like in Unity. 
     /// </summary>
-    public class Main : ICompositionRoot
-    {
-        public Main()
-        {
+    public class Main : ICompositionRoot {
+        public Main() {
             InitAssets();
             SetupEngines();
             SetupEntities();
         }
 
-        void InitAssets()
-        {
+        void InitAssets() {
             //Do not copy this. initially I thought it was a good idea to use
             //Json serialization to replace resources, but it's less convenient
             //than I thought
@@ -98,8 +94,7 @@ namespace Svelto.ECS.Example.Survive
         ///     defoines the EntityViews, EntityStructs and EntityViewStructs that must be generated once the
         ///     Entity is built
         /// </summary>
-        void SetupEngines()
-        {
+        void SetupEngines() {
             //The Engines Root is the core of Svelto.ECS. You must NEVER inject the EngineRoot
             //as it is, therefore the composition root must hold a reference or it will be 
             //GCed.
@@ -107,7 +102,7 @@ namespace Svelto.ECS.Example.Survive
             //when to inject the EntityViews. You shouldn't use a custom one unless you know what you 
             //are doing or you are not working with Unity.
             _unityEntitySubmissionScheduler = new UnityEntitySubmissionScheduler();
-            _enginesRoot                    = new EnginesRoot(_unityEntitySubmissionScheduler);
+            _enginesRoot = new EnginesRoot(_unityEntitySubmissionScheduler);
             //Engines root can never be held by anything else than the context itself to avoid leaks
             //That's why the EntityFactory and EntityFunctions are generated.
             //The EntityFactory can be injected inside factories (or engine acting as factories)
@@ -125,24 +120,24 @@ namespace Svelto.ECS.Example.Survive
             //engines. The ISequencer is also not the common way to communicate
             //between engines
             var playerDeathFlow = new PlayerDeathFlow();
-            var enemyDeathFlow  = new EnemyDeathFlow();
+            var enemyDeathFlow = new EnemyDeathFlow();
 
             //wrap non testable unity static classes, so that 
             //can be mocked if needed.
             IRayCaster rayCaster = new RayCaster();
-            ITime      time      = new Time();
+            ITime time = new Time();
 
             //Player related engines. ALL the dependencies must be solved at this point
             //through constructor injection.
-            var playerGunShoots  = new PlayerGunShoots(rayCaster, time);
-            var playerMoves  = new PlayerMoves(rayCaster, time);
+            var playerGunShoots = new PlayerGunShoots(rayCaster, time);
+            var playerMoves = new PlayerMoves(rayCaster, time);
             var playerAnimates = new PlayerAnimates();
-            var playerDies     = new PlayerDies(playerDeathFlow, entityFunctions);
+            var playerDies = new PlayerDies(playerDeathFlow, entityFunctions);
 
             //Enemy related engines
             var enemyAnimates = new EnemyAnimates(time, enemyDeathFlow, entityFunctions);
-            var enemyAttacks    = new EnemyAttacks(time);
-            var enemyMoves  = new EnemyMoves();
+            var enemyAttacks = new EnemyAttacks(time);
+            var enemyMoves = new EnemyMoves();
 
             //GameObjectFactory allows to create GameObjects without using the Static
             //method GameObject.Instantiate. While it seems a complication
@@ -152,14 +147,14 @@ namespace Svelto.ECS.Example.Survive
             //with static classes and singletons is a terrible mistake)
             var gameObjectFactory = new GameObjectFactory();
             //Factory is one of the few patterns that work very well with ECS. Its use is highly encouraged
-            IEnemyFactory enemyFactory       = new EnemyFactory(gameObjectFactory, _entityFactory);
-            var           enemySpawns = new EnemySpawns(enemyFactory, entityFunctions);
-            var           enemyDies   = new EnemyDies(entityFunctions, enemyDeathFlow);
+            IEnemyFactory enemyFactory = new EnemyFactory(gameObjectFactory, _entityFactory);
+            var enemySpawns = new EnemySpawns(enemyFactory, entityFunctions);
+            var enemyDies = new EnemyDies(entityFunctions, enemyDeathFlow);
 
             //hud and sound engines
-            var hudHandles         = new HUDHandles(time);
+            var hudHandles = new HUDHandles(time);
             var damageTriggersSound = new DamageTriggersSound();
-            var scoreCalculates       = new ScoreCalculates();
+            var scoreCalculates = new ScoreCalculates();
 
             //The ISequencer implementation is very simple, but allows to perform
             //complex concatenation including loops and conditional branching.
@@ -176,54 +171,46 @@ namespace Svelto.ECS.Example.Survive
             playerDeathFlow.SetSequence(playerDies, playerMoves, playerAnimates, enemyAnimates, damageTriggersSound, hudHandles);
             enemyDeathFlow.SetSequence(enemyDies, scoreCalculates, damageTriggersSound, enemyAnimates, enemySpawns);
 
-
             //All the logic of the game must lie inside engines
-            //Player engines
-            _enginesRoot.AddEngine(playerMoves);
+            _enginesRoot.AddEngine(playerMoves); //Player engines
             _enginesRoot.AddEngine(playerAnimates);
             _enginesRoot.AddEngine(playerGunShoots);
             _enginesRoot.AddEngine(new PlayerReadsInput());
             _enginesRoot.AddEngine(new PlayerGunShotSpawnsFX());
             _enginesRoot.AddEngine(playerDies);
-
-            //enemy engines
-            _enginesRoot.AddEngine(enemySpawns);
+            
+            _enginesRoot.AddEngine(enemySpawns); //enemy engines
             _enginesRoot.AddEngine(enemyAttacks);
             _enginesRoot.AddEngine(enemyMoves);
             _enginesRoot.AddEngine(enemyAnimates);
             _enginesRoot.AddEngine(enemyDies);
-            //other engines
-            _enginesRoot.AddEngine(new HealthTakesDamage());
+            
+            _enginesRoot.AddEngine(new HealthTakesDamage()); //other engines
             _enginesRoot.AddEngine(new CameraFollowsTarget(time));
-            _enginesRoot.AddEngine(new Dies());
+            _enginesRoot.AddEngine(new HealthDies());
             _enginesRoot.AddEngine(damageTriggersSound);
             _enginesRoot.AddEngine(hudHandles);
             _enginesRoot.AddEngine(scoreCalculates);
         }
-
 
         /// <summary>
         /// While until recently I thought that creating entities in the context would be all right, I am coming to
         /// realise that engines should always handle the creation of entities. I will refactor this when the right
         /// time comes.
         /// </summary>
-        void SetupEntities()
-        {
+        void SetupEntities() {
             BuildPlayerEntities();
             BuildCameraEntity();
         }
 
-        public void OnContextCreated<T>(T contextHolder)
-        {
+        public void OnContextCreated<T>(T contextHolder) {
             BuildEntitiesFromScene(contextHolder as UnityContext);
         }
 
-        void BuildPlayerEntities()
-        {
+        void BuildPlayerEntities() {
             var prefabsDictionary = new PrefabsDictionary();
-
             var player = prefabsDictionary.Istantiate("Player");
-
+            
             //Building entities explicitly should be always preferred and MUST be used if an implementor doesn't need to
             //be a Monobehaviour. You should strive to create implementors not as monobehaviours. Implementors as
             //monobehaviours are meant only to function as bridge between Svelto.ECS and Unity3D. Using implementor as
@@ -231,25 +218,24 @@ namespace Svelto.ECS.Example.Survive
             //instead. The Player Entity is made of EntityViewStruct+Implementors as monobehaviours and EntityStructs.
             //The PlayerInputDataStruct doesn't need to be initialized (yay!!) but the HealthEntityStruct does.
             //Here I show the official method to do it
-            var initializer =
-                _entityFactory.BuildEntity<PlayerEntityDescriptor>(player.GetInstanceID(), ECSGroups.Player,
-                                                                   player.GetComponents<IImplementor>());
+            var initializer = _entityFactory.BuildEntity<PlayerEntityDescriptor>(
+                player.GetInstanceID(), ECSGroups.Player, player.GetComponents<IImplementor>());
+            
             initializer.Init(new Health {current = 100});
 
             //unluckily the gun is parented in the original prefab, so there is no easy way to create it explicitly, I
             //have to create if from the existing gameobject.
             var gun = player.GetComponentInChildren<PlayerShootingImplementor>();
 
-            _entityFactory.BuildEntity<PlayerGunEntityDescriptor>(gun.gameObject.GetInstanceID(), ECSGroups.Player,
-                                                                  new[] {gun});
+            _entityFactory.BuildEntity<PlayerGunEntityDescriptor>(
+                gun.gameObject.GetInstanceID(), ECSGroups.Player, new[] {gun});
         }
 
-        void BuildCameraEntity()
-        {
+        void BuildCameraEntity() {
             var implementor = UnityEngine.Camera.main.gameObject.AddComponent<CameraImplementor>();
 
-            _entityFactory.BuildEntity<CameraEntityDescriptor>(UnityEngine.Camera.main.GetInstanceID(),
-                                                               ECSGroups.ExtraStuff, new[] {implementor});
+            _entityFactory.BuildEntity<CameraEntityDescriptor>(
+                UnityEngine.Camera.main.GetInstanceID(), ECSGroups.ExtraStuff, new[] {implementor});
         }
 
         /// <summary>
@@ -257,8 +243,7 @@ namespace Svelto.ECS.Example.Survive
         /// It is absolutely not necessary and I wouldn't rely on this in production
         /// </summary>
         /// <param name="contextHolder"></param>
-        void BuildEntitiesFromScene(UnityContext contextHolder)
-        {
+        void BuildEntitiesFromScene(UnityContext contextHolder) {
             //An EntityDescriptorHolder is a special Svelto.ECS class created to exploit
             //GameObjects to dynamically retrieve the Entity information attached to it.
             //Basically a GameObject can be used to hold all the information needed to create
@@ -266,33 +251,23 @@ namespace Svelto.ECS.Example.Survive
             //This allows to trigger a sort of polymorphic code that can be re-used to 
             //create several type of entities.
 
-            IEntityDescriptorHolder[] entities = contextHolder.GetComponentsInChildren<IEntityDescriptorHolder>();
-
+            var entities = contextHolder.GetComponentsInChildren<IEntityDescriptorHolder>();
             //However this common pattern in Svelto.ECS application exists to automatically
             //create entities from gameobjects already presented in the scene.
             //I still suggest to avoid this method though and create entities always
             //manually and explicitly. Basically EntityDescriptorHolder should be avoided
             //whenever not strictly necessary.
 
-            for (int i = 0; i < entities.Length; i++)
-            {
-                var entityDescriptorHolder = entities[i];
-                var entityViewsToBuild     = entityDescriptorHolder.GetDescriptor();
-                _entityFactory.BuildEntity
-                    (new EGID(((MonoBehaviour) entityDescriptorHolder).gameObject.GetInstanceID(), ECSGroups.ExtraStuff),
-                     entityViewsToBuild,
-                     (entityDescriptorHolder as MonoBehaviour).GetComponentsInChildren<IImplementor>());
-            }
+            foreach (var entity in entities)
+                _entityFactory.BuildEntity(
+                    new EGID(((MonoBehaviour) entity).gameObject.GetInstanceID(), ECSGroups.ExtraStuff),
+                    entity.GetDescriptor(), (entity as MonoBehaviour).GetComponentsInChildren<IImplementor>());
         }
 
-        public void OnContextInitialized()
-        {
-        }
+        public void OnContextInitialized() { }
 
-        public void OnContextDestroyed()
-        {
-            //final clean up
-            _enginesRoot.Dispose();
+        public void OnContextDestroyed() {
+            _enginesRoot.Dispose(); //final clean up
 
             //Tasks can run across level loading, so if you don't want
             //that, the runners must be stopped explicitly.
@@ -301,8 +276,8 @@ namespace Svelto.ECS.Example.Survive
             TaskRunner.StopAndCleanupAllDefaultSchedulers();
         }
 
-        EnginesRoot                    _enginesRoot;
-        IEntityFactory                 _entityFactory;
+        EnginesRoot _enginesRoot;
+        IEntityFactory _entityFactory;
         UnityEntitySubmissionScheduler _unityEntitySubmissionScheduler;
     }
 
@@ -312,7 +287,5 @@ namespace Svelto.ECS.Example.Survive
     ///can be later queried, usually to create entities from statically created
     ///gameobjects. 
     /// </summary>
-    public class MainContext : UnityContext<Main>
-    {
-    }
+    public class MainContext : UnityContext<Main> { }
 }
