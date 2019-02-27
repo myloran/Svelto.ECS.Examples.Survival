@@ -41,7 +41,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player {
         /// <param name="player"></param>
         /// <param name="input"></param>
         void Move(ref Player player, ref Input input) {
-            var movement = input.value.normalized * player.speed.movementSpeed * _time.deltaTime; //Normalise the movement vector and make it proportional to the speed per second.
+            var movement = input.input.normalized * player.speed.movementSpeed * _time.deltaTime; //Normalise the movement vector and make it proportional to the speed per second.
             player.transform.position = player.position.position + movement; //Move the player to it's current position plus the movement.
         }
 

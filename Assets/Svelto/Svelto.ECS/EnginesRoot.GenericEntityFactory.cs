@@ -1,4 +1,6 @@
-﻿namespace Svelto.ECS
+﻿using Svelto.ECS.Unity;
+
+namespace Svelto.ECS
 {
     public partial class EnginesRoot
     {
@@ -21,7 +23,8 @@
                 return _weakEngine.Target.BuildEntity<T>(egid, implementors);
             }
 
-            public EntityStructInitializer BuildEntity<T>(EGID egid, T entityDescriptor, object[] implementors)  where T:IEntityDescriptor
+            public EntityStructInitializer BuildEntity<T>(EGID egid, T entityDescriptor,
+                IImplementor[] implementors = null)  where T:IEntityDescriptor
             {
                 return _weakEngine.Target.BuildEntity(egid, entityDescriptor, implementors);
             }

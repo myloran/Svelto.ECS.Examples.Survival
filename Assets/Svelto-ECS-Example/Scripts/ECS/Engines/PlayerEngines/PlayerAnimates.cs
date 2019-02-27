@@ -22,7 +22,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Player {
             var inputs = entitiesDB.QueryEntities<Input>(ECSGroups.Player, out _);
 
             while (true) {
-                var input = inputs[0].value;
+                var input = inputs[0].input;
                 var walking = input.x != 0f || input.z != 0f; //Create a boolean that is true if either of the input axes is non-zero.
                 
                 players[0].animation.animationState = new AnimationState("IsWalking", walking); //Tell the animator whether or not the player is walking.
