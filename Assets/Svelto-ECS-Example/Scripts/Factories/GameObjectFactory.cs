@@ -11,7 +11,6 @@ namespace Svelto.Context {
         public GameObject Build(string prefabName) {
             var go = Build(_prefabs[prefabName][0]);
             var parent = _prefabs[prefabName][1];
-
             if (parent == null) return go;
             
             var transform = go.transform;

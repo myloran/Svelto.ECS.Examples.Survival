@@ -30,7 +30,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies {
                 var enemies = entitiesDB.QueryEntities<EnemyView>(ECSGroups.ActiveEnemies, out count);
 
                 for (var i = 0; i < count; i++) {
-                    if (damageables[i].damaged == false) continue;
+                    if (!damageables[i].damaged) continue;
 
                     enemies[i].vfx.position = damageables[i].damageInfo.damagePoint;
                     enemies[i].vfx.play = true;

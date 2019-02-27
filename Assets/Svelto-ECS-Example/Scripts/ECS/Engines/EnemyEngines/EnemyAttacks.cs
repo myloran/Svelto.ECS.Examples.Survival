@@ -29,7 +29,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies {
 
                 var damageables = entitiesDB.QueryEntities<Damageable>(ECSGroups.EnemyTargets, out var damageableCount);
                 var attacks = entitiesDB.QueryEntities<EnemyAttackStruct>(ECSGroups.ActiveEnemies, out var enemyCount);
-                var enemies = entitiesDB.QueryEntities<EnemyAttack>(ECSGroups.ActiveEnemies, out enemyCount);
+                var collisions = entitiesDB.QueryEntities<EnemyAttack>(ECSGroups.ActiveEnemies, out enemyCount);
 
                 //this is more complex than needed code is just to show how you can use entity structs
                 //this case is banal, entity structs should be use to handle hundreds or thousands
@@ -39,7 +39,7 @@ namespace Svelto.ECS.Example.Survive.Characters.Enemies {
                 //a game using only entity structs, but entity structs make sense ONLY if they
                 //hold value types, so they come with a lot of limitations
                 for (var i = 0; i < enemyCount; i++)
-                    attacks[i].entityInRange = enemies[i].targetTrigger.entityInRange;
+                    attacks[i].entityInRange = collisions[i].targetTrigger.entityInRange;
 
                 for (var i = 0; i < damageableCount; i++) {
                     for (var j = 0; j < enemyCount; j++) {
