@@ -2,62 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Svelto.Context
-{
-    public class GameObjectFactory : Factories.IGameObjectFactory
-    {
-        public GameObjectFactory()
-        {
+namespace Svelto.Context {
+    public class GameObjectFactory : Factories.IGameObjectFactory {
+        public GameObjectFactory() {
             _prefabs = new Dictionary<string, GameObject[]>();
         }
 
-        public GameObject Build(string prefabName)
-        {
+        public GameObject Build(string prefabName) {
             var go = Build(_prefabs[prefabName][0]);
+            var parent = _prefabs[prefabName][1];
 
-            GameObject parent = _prefabs[prefabName][1];
+            if (parent == null) return go;
+            
+            var transform = go.transform;
+            var scale = transform.localScale;
+            var rotation = transform.localRotation;
+            var position = transform.localPosition;
 
-            if (parent != null)
-            {
-                Transform transform = go.transform;
+            parent.SetActive(true);
 
-                var scale = transform.localScale;
-                var rotation = transform.localRotation;
-                var position = transform.localPosition;
-
-                parent.SetActive(true);
-
-                transform.parent = parent.transform;
-
-                transform.localPosition = position;
-                transform.localRotation = rotation;
-                transform.localScale = scale;
-            }
+            transform.parent = parent.transform;
+            transform.localPosition = position;
+            transform.localRotation = rotation;
+            transform.localScale = scale;
 
             return go;
         }
 
-        public virtual GameObject Build(GameObject prefab)
-        {
-            var copy = Object.Instantiate(prefab) as GameObject;
-
-            return copy;
-        }
+        public virtual GameObject Build(GameObject prefab) => Object.Instantiate(prefab);
 
         /// <summary>
         /// Register a prefab to be built later using a string ID.
         /// </summary>
         /// <param name="prefab">original prefab</param>
-        public void RegisterPrefab(GameObject prefab, string prefabName, GameObject parent = null)
-        {
+        public void RegisterPrefab(GameObject prefab, string prefabName, GameObject parent = null) {
             var objects = new GameObject[2];
-
-            objects[0] = prefab; objects[1] = parent;
+            objects[0] = prefab;
+            objects[1] = parent;
 
             _prefabs.Add(prefabName, objects);
         }
 
-        Dictionary<string, GameObject[]>                        _prefabs;
+        Dictionary<string, GameObject[]> _prefabs;
     }
 }
 #endif
